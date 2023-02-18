@@ -51,6 +51,37 @@ Budget:
   TimeUnit: MONTHLY
 ```
 * created Billing Alarm via Account Settings & CloudWatch
+```sh
+$ aws cloudwatch describe-alarms
+```
+```yaml
+CompositeAlarms: []
+MetricAlarms:
+- ActionsEnabled: true
+  AlarmActions:
+  - arn:aws:sns:us-east-2:785139023983:Default_CloudWatch_Alarms_Topic
+  AlarmArn: arn:aws:cloudwatch:us-east-2:785139023983:alarm:BillingAlarmist
+  AlarmConfigurationUpdatedTimestamp: '2023-02-18T06:13:38.837000+00:00'
+  AlarmName: BillingAlarmist
+  ComparisonOperator: GreaterThanOrEqualToThreshold
+  DatapointsToAlarm: 1
+  Dimensions:
+  - Name: Currency
+    Value: USD
+  EvaluationPeriods: 1
+  InsufficientDataActions: []
+  MetricName: EstimatedCharges
+  Namespace: AWS/Billing
+  OKActions: []
+  Period: 21600
+  StateReason: 'Unchecked: Initial alarm creation'
+  StateTransitionedTimestamp: '2023-02-18T06:13:38.837000+00:00'
+  StateUpdatedTimestamp: '2023-02-18T06:13:38.837000+00:00'
+  StateValue: INSUFFICIENT_DATA
+  Statistic: Maximum
+  Threshold: 1.0
+  TreatMissingData: missing
+```
 #### Gitpod CDE
 * configured Github repo to be writable, so that Gitpod can sync changes to Github
 * installed AWS CLI v2 in gitpod CDE & added commands in gitpod.yml file to install AWS CLI v2
