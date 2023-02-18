@@ -10,8 +10,8 @@
 * created a new IAM user and attached Administrator permission policy
 * generated programmatic credentials
 #### Billing
-* created new AWS Zero Spend Budget;
 * created a $1 USD monthly AWS Budget & a monthly $1 USD credit spend budget
+![Image of CLI output of Zero Spend budget](/assets/Screenshot_20230217_171543.png)
 * created Billing Alarm via Account Settings & CloudWatch
 #### Gitpod CDE
 * configured Github repo to be writable, so that Gitpod can sync changes to Github
