@@ -88,3 +88,6 @@ MetricAlarms:
 * created AWS environment variables for AWS region, access key, secret access key & account ID so that they presist restarts of the CDE
 * AWS CLI installed correctly on Gitpod and successfully called aws sts get-caller-identity
 ![Image of AWS CLI installation and successful API call](/assets/Screenshot_20230217_220823.png)
+#### Conceptual & Architectural Diagrams
+![Image of conceptual diagram](/assets/Conceptual_Architecture.drawio-V2.svg)
+![Image of conceptual diagram](assets/IMG_20230218_105509723.jpg)
