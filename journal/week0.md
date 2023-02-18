@@ -90,4 +90,4 @@ MetricAlarms:
 ![Image of AWS CLI installation and successful API call](/assets/Screenshot_20230217_220823.png)
 #### Conceptual & Architectural Diagrams
 ![Image of conceptual diagram](/assets/Conceptual_Architecture.drawio-V2.svg)
-![Image of conceptual diagram](assets/IMG_20230218_105509723.jpg)
+![Image of conceptual napkin diagram](/assets/IMG_20230218_105509723.jpg)
