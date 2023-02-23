@@ -170,6 +170,7 @@ networks:
 ![Screenshot of frontend of Cruddur app running in browser]()
 
 ### Create Notification Feature
+#### Create and map backend endpoint
 - In the frontend-react-js folder, make to execute `npm i` if not completed earlier, then right-click `docker-compose.yml` file and select **Docker Compose Up**
 - Ensure ports 3000 and 4567 are open/unlocked in **PORTS** tab
 - Click on link associated with port 3000
@@ -194,3 +195,12 @@ networks:
                 items:
                   $ref: "#/components/schemas/Activity"
 ```
+- create a `services/notifications_activities.py` file
+- append to `app.py` file
+
+![HINT screenshot of 404 error to backend endpoint]()
+- Click on url associated with backend, port 4567 to view json object
+
+![HINT screenshot of json object from backend endpoint]()
+
+#### Map new frontend endpoint to new backend endpoint
