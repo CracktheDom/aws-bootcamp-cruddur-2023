@@ -125,7 +125,7 @@ docker build -t frontend-reack-js:1.0 ./frontend-react-js
 
 ### Create docker-compose.yaml file
 ```bash
-touch /docker-compose.yml
+touch ../docker-compose.yml
 ```
 add the following code into the `docker-compose.yml` file
 
