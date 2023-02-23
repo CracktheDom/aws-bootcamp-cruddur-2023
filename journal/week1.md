@@ -139,7 +139,7 @@ services:
     build: ./backend-flask
     ports:
       - "4567:4567"
-     volumes:
+    volumes:
        - ./backend-flask:/backend-flask
   frontend-react-js:
     environment:
