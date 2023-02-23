@@ -45,6 +45,14 @@ CMD [ "python3", "-m", "flask", "run", "--host=0.0.0.0", "--port=4567"]
 
 #### Build Container
 
+* stop Flask server with Ctrl + c
+* execute the following commands in the terminal:
+```bash
+unset FRONTEND_URL
+```
+```bash
+unset BACKEND_URL
+```
 ```bash
 docker build -t backend-flask:1.0 ./backend-flask
 ```
