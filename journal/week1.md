@@ -1,5 +1,10 @@
 # Week 1 — App Containerization
 
+## VSCode Docker Extension
+Docker for VSCode makes it easy to use Docker
+
+| Gitpod comes preinstalled with extension
+
 ## Containerizer Backend
 
 ### Run Python
@@ -36,5 +41,17 @@ ENV FLASK_ENV=development
 
 EXPOSE ${PORT}
 CMD [ "python3", "-m", "flask", "run", "--host=0.0.0.0", "--port=4567"]
+```
+
+#### Build Container
+
+```bash
+docker build -t backend-flask:1.0 ./backend-flask
+```
+
+### Run Container
+
+```bash
+some command
 ```
 
