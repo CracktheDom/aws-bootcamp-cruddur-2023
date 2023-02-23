@@ -90,4 +90,68 @@ curl -X GET http://localhost:4567/api/activities/home -H "Accept: application/js
 ```bash
 docker logs <CONTAINER_ID>
 ```
+### Get Container ID to store in Environment variable
+CONTAINER_ID=$(docker run --rm -p 4567:4567 -d backend-flask:1.0)
 
+## Containerize Frontend
+
+### Run NPM Install
+We have to execute the `npm install` command before building the container so that the contents of node_modules will be copied
+```bash
+cd frontend-react-js
+npm i
+```
+### Create a Dockerfile
+```bash
+touch /frontend-react-js/Dockerfile
+```
+Enter following code into `Dockerfile`:
+
+```bash
+FROM node:16.18
+
+ENV PORT=3000
+
+COPY . /frontend-react-js
+WORKDIR /frontend-react-js
+RUN npm install
+EXPOSE ${PORT}
+CMD ["npm", "start"]
+```
+### Build Container
+```bash
+docker build -t frontend-reack-js:1.0 ./frontend-react-js
+```
+
+### Create docker-compose.yaml file
+```bash
+touch /docker-compose.yml
+```
+add the following code into the `docker-compose.yml` file
+
+```yml
+version: "3.8"
+services:
+  backend-flask:
+    environment:
+      FRONTEND_URL: "http://3001-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}"
+      BACKEND_URL: "http://4567-${GITPOS_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}"
+    build: ./backend-flask
+    ports:
+      - "4567:4567"
+     volumes:
+       - ./backend-flask:/backend-flask
+  frontend-react-js:
+    environment:
+      REACT_APP_BACKEND_URL: "http://4567-${GITPOS_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST})"
+    build: ./frontend-react-js
+    ports:
+      - "3000:3000"
+    volumes:
+       - ./frontend-flask:/frontend-flask
+       
+networks:
+  internal-network:
+    driver: bridge
+    name: cruddur
+```
