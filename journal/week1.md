@@ -168,3 +168,29 @@ networks:
 - Click on url associated woth port 3000 to view front end of Cruddur app
 
 ![Screenshot of frontend of Cruddur app running in browser]()
+
+### Create Notification Feature
+- In the frontend-react-js folder, make to execute `npm i` if not completed earlier, then right-click `docker-compose.yml` file and select **Docker Compose Up**
+- Ensure ports 3000 and 4567 are open/unlocked in **PORTS** tab
+- Click on link associated with port 3000
+- open `backend-flask/openapi-3.0.yml` file, then click on `OpenAPI` extension in the left rail
+- Click on ellipsis and click **Add**
+- in the new code snippet that was added to file enter the following code:
+
+```yaml
+  /api/activities/notifications:
+    get:
+      description: 'Return a feed of all of those that I follow'
+      tags:
+        - activities
+      parameters: []
+      responses:
+        '200':
+          description: Returns array of activities
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Activity"
+```
