@@ -45,7 +45,7 @@ CMD [ "python3", "-m", "flask", "run", "--host=0.0.0.0", "--port=4567"]
 
 #### Build Container
 
-* stop Flask server with `Ctrl + c`
+* stop Flask server by pressing `Ctrl + c`
 * execute the following commands in the terminal:
 ```bash
 unset FRONTEND_URL
@@ -74,9 +74,11 @@ docker run --rm -p 4567:4567 -it backend-flask:1.0
 
 ![screenshot of environment variable not set in running container]()
 
-* stop container `Ctrl + c`
+* stop container by pressing `Ctrl + c`
 * restart container with environment variable parameters `docker run --rm -p 4567:4567 -e FRONTEND_URL="*" -e BACKEND_URL="*" -it backend-flask:1.0`
 * navigate to url in **PORTS** tab in Gitpod, append `/api/activities/home` to url and json object will be visible in browser
+
+![HINT: screenshot of browser json object from bankend endpoint]()
 
 ### Get Images or Containers
 
@@ -85,7 +87,7 @@ docker run --rm -p 4567:4567 -it backend-flask:1.0
 
 ### Send curl to Test Server
 ```bash
-curl -X GET "http://localhost:4567/api/activities/home" -H "Accept: application/json" -H Content-Type: application/json"
+curl -X GET "http://localhost:4567/api/activities/home" -H "Accept: application/json" -H "Content-Type: application/json"
 ```
 
 ### Check Container logs
