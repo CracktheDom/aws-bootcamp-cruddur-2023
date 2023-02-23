@@ -9,7 +9,7 @@ Docker for VSCode makes it easy to use Docker
 
 ### Run Python
 
-```sh
+```bash
 cd backend-flask
 export FRONTEND_URL="*"
 export BACKEND_URL="*"
@@ -49,17 +49,28 @@ CMD [ "python3", "-m", "flask", "run", "--host=0.0.0.0", "--port=4567"]
 * execute the following commands in the terminal:
 ```bash
 unset FRONTEND_URL
-```
-```bash
 unset BACKEND_URL
-```
-```bash
+cd ..
 docker build -t backend-flask:1.0 ./backend-flask
 ```
+
+execute `docker image ls` to confirm that image was created
+
+![Hint screenshot of docker image command]()
 
 ### Run Container
 
 ```bash
-some command
+docker run --rm -p 4567:4567 -it backend-flask:1.0
 ```
+* ensure port 4567 is unlocked in **PORTS** tab in Gitpod
+* navigate to url displayed in **PORTS**
+* should see **404 Not Found** page and the server running in terminal should confirm this by displaying the same error code
+* stop container and run again with env
+* execute `docker ps` to view running containers with ID
+* execute `docker logs <container id>` to views logs running container
+* **OR** in Docker extension right-click on running container and click on `Attach Shell` to execute commands within the container
+* within container execute `env | grep _URL` to verify syntax of above was incorrect and did not pass env to container
+* `docker run --rm -p 4567:4567 -e FRONTEND_URL="*" -e BACKEND_URL="*" -it backend-flask:1.0`
+* navigate to url in **PORTS** tab in Gitpod, append /api/activities/home to url and json object will be present
 
