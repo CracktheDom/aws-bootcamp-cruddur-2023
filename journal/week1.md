@@ -155,3 +155,11 @@ networks:
     driver: bridge
     name: cruddur
 ```
+- Right-click `docker-compose.yml` file and select **docker compose up**
+- Execute `docker ps` to view containers for frontend and backend running
+
+![Hint screenshot of docker ps command showing containers running]()
+- Ensure port 3000 & 4567 are unlocked/made public
+- Click on url associated woth port 3000 to view front end of Cruddur app
+
+![Screenshot of frontend of Cruddur app running in browser]()
