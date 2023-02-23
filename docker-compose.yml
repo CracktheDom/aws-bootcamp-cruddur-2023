@@ -16,7 +16,7 @@ services:
     ports:
       - "3000:3000"
     volumes:
-       - ./frontend-flask:/frontend-flask
+       - ./frontend-react-js:/frontend-react-js
        
 networks:
   internal-network:
