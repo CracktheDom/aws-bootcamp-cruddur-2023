@@ -5,7 +5,7 @@ Docker for VSCode makes it easy to use Docker
 
 | Gitpod comes preinstalled with extension
 
-## Containerizer Backend
+## Containerize Backend
 
 ### Run Python
 
@@ -73,4 +73,21 @@ docker run --rm -p 4567:4567 -it backend-flask:1.0
 * within container execute `env | grep _URL` to verify syntax of above was incorrect and did not pass env to container
 * `docker run --rm -p 4567:4567 -e FRONTEND_URL="*" -e BACKEND_URL="*" -it backend-flask:1.0`
 * navigate to url in **PORTS** tab in Gitpod, append /api/activities/home to url and json object will be present
+
+### Get Images or Containers
+
+```bash
+docker ps -a
+docker image ls
+```
+
+### Send curl to Test Server
+```bash
+curl -X GET http://localhost:4567/api/activities/home -H "Accept: application/json" -H Content-Type: application/json"
+```
+
+### Check Container logs
+```bash
+docker logs <CONTAINER_ID>
+```
 
