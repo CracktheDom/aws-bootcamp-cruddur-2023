@@ -7,7 +7,7 @@ Docker for VSCode makes it easy to use Docker
 
 ## Containerize Backend
 
-### Run Python
+### Run Python to start Flask server
 
 ```bash
 cd backend-flask
@@ -17,14 +17,14 @@ python -m flask run --host=0.0.0.0 --port=4567
 ```
 - make sure port 4567 is open/unlocked via Gitpod **PORTS** tab
 - click on url in **PORTS** tab
-- and append /api/activities/home to url
-- should see json object in browser
+- and append `/api/activities/home` to url
+- json object will be visible in browser
 
 ![HINT input url for json response]()
 
 ### Add Dockerfile
 
-Create a file here: `backend-flask/Dockerfile`
+Create a file here: `touch ./Dockerfile`
 Input the following into file:
 
 ```sh
@@ -45,7 +45,7 @@ CMD [ "python3", "-m", "flask", "run", "--host=0.0.0.0", "--port=4567"]
 
 #### Build Container
 
-* stop Flask server with Ctrl + c
+* stop Flask server with `Ctrl + c`
 * execute the following commands in the terminal:
 ```bash
 unset FRONTEND_URL
@@ -66,32 +66,34 @@ docker run --rm -p 4567:4567 -it backend-flask:1.0
 * ensure port 4567 is unlocked in **PORTS** tab in Gitpod
 * navigate to url displayed in **PORTS**
 * should see **404 Not Found** page and the server running in terminal should confirm this by displaying the same error code
-* stop container and run again with env
-* execute `docker ps` to view running containers with ID
-* execute `docker logs <container id>` to views logs running container
-* **OR** in Docker extension right-click on running container and click on `Attach Shell` to execute commands within the container
+* stop container and run again with environment variable parameters
+* execute `docker ps` to view running containers with ID's
+* execute `docker logs <container id>` to views logs of running container
+* **OR** in Docker extension right-click on running container and click on `Attach Shell` to activate shell & execute commands within the container
 * within container execute `env | grep _URL` to verify syntax of above was incorrect and did not pass env to container
-* `docker run --rm -p 4567:4567 -e FRONTEND_URL="*" -e BACKEND_URL="*" -it backend-flask:1.0`
-* navigate to url in **PORTS** tab in Gitpod, append /api/activities/home to url and json object will be present
+
+![screenshot of environment variable not set in running container]()
+
+* stop container `Ctrl + c`
+* restart container with environment variable parameters `docker run --rm -p 4567:4567 -e FRONTEND_URL="*" -e BACKEND_URL="*" -it backend-flask:1.0`
+* navigate to url in **PORTS** tab in Gitpod, append `/api/activities/home` to url and json object will be visible in browser
 
 ### Get Images or Containers
 
-```bash
-docker ps -a
-docker image ls
-```
+`docker ps -a` displays running containers
+`docker image ls -a` displays downloads images
 
 ### Send curl to Test Server
 ```bash
-curl -X GET http://localhost:4567/api/activities/home -H "Accept: application/json" -H Content-Type: application/json"
+curl -X GET "http://localhost:4567/api/activities/home" -H "Accept: application/json" -H Content-Type: application/json"
 ```
 
 ### Check Container logs
 ```bash
 docker logs <CONTAINER_ID>
 ```
-### Get Container ID to store in Environment variable
-CONTAINER_ID=$(docker run --rm -p 4567:4567 -d backend-flask:1.0)
+### Get Running Container ID to store in Environment Variable
+`CONTAINER_ID=$(docker ps -q backend-flask:1.0)`
 
 ## Containerize Frontend
 
@@ -120,12 +122,13 @@ CMD ["npm", "start"]
 ```
 ### Build Container
 ```bash
+cd ..
 docker build -t frontend-reack-js:1.0 ./frontend-react-js
 ```
 
 ### Create docker-compose.yaml file
 ```bash
-touch ../docker-compose.yml
+touch ./docker-compose.yml
 ```
 add the following code into the `docker-compose.yml` file
 
@@ -155,8 +158,8 @@ networks:
     driver: bridge
     name: cruddur
 ```
-- Right-click `docker-compose.yml` file and select **docker compose up**
-- Execute `docker ps` to view containers for frontend and backend running
+- Right-click `docker-compose.yml` file and select **Docker Compose Up**
+- Execute `docker ps` to view running containers for frontend and backend
 
 ![Hint screenshot of docker ps command showing containers running]()
 - Ensure port 3000 & 4567 are unlocked/made public
