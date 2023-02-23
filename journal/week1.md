@@ -103,7 +103,7 @@ npm i
 ```
 ### Create a Dockerfile
 ```bash
-touch /frontend-react-js/Dockerfile
+touch ./Dockerfile
 ```
 Enter following code into `Dockerfile`:
 
