@@ -20,7 +20,7 @@ python -m flask run --host=0.0.0.0 --port=4567
 - and append `/api/activities/home` to url
 - json object will be visible in browser
 
-![HINT input url for json response]()
+![HINT input url for json response](/assets/Screenshot_20230223_020228.png)
 
 ### Add Dockerfile
 
@@ -56,7 +56,7 @@ docker build -t backend-flask:1.0 ./backend-flask
 
 execute `docker image ls` to confirm that image was created
 
-![Hint screenshot of docker image command]()
+![Hint screenshot of docker image command](https://user-images.githubusercontent.com/85846263/221085819-a55b8657-ddc7-446b-a295-b2d1f9702316.png)
 
 ### Run Container
 
@@ -66,19 +66,23 @@ docker run --rm -p 4567:4567 -it backend-flask:1.0
 * ensure port 4567 is unlocked in the **PORTS** tab in Gitpod
 * navigate to url displayed in the **PORTS**
 * should see **404 Not Found** page and the server running in terminal should confirm this by displaying the same error code
+
+![404 error](/assets/Screenshot_20230223_155245.png)
+
 * stop container and run again with environment variable parameters
 * execute `docker ps` to view running containers with ID's
 * execute `docker logs <container id>` to views logs of running container
 * **OR** in Docker extension right-click on running container and click on `Attach Shell` to activate shell & execute commands within the container
 * within container execute `env | grep _URL` to verify syntax of above was incorrect and did not pass env to container
 
-![screenshot of environment variable not set in running container]()
+![screenshot of environment variable not set in running container](/assets/Screenshot_20230223_031445.png)
 
 * stop container by pressing `Ctrl + c`
 * restart container with environment variable parameters `docker run --rm -p 4567:4567 -e FRONTEND_URL="*" -e BACKEND_URL="*" -it backend-flask:1.0`
 * navigate to url in the **PORTS** tab in Gitpod, append `/api/activities/home` to url and json object will be visible in browser
 
-![HINT: screenshot of browser json object from backend endpoint]()
+![HINT: screenshot of browser json object from backend endpoint](/assets/Screenshot_20230223_031445.png)
+
 
 ### Get Images or Containers
 
@@ -163,11 +167,14 @@ networks:
 - Right-click `docker-compose.yml` file and select **Docker Compose Up**
 - Execute `docker ps` to view running containers for frontend and backend
 
-![Hint screenshot of docker ps command showing containers running]()
+![Hint screenshot of docker ps command showing containers running](/assets/Screenshot_20230223_043705.png)
+
 - Ensure port 3000 & 4567 are unlocked/made public
 - Click on url associated woth port 3000 to view front end of Cruddur app
 
+
 ![Screenshot of frontend of Cruddur app running in browser]()
+
 
 ### Create Notification Feature
 #### Create and map backend endpoint
@@ -269,7 +276,7 @@ import NotificationsFeedPage from './pages/NotificationsFeedPage';
 - added Docker code to docker-compose.yml file to create DynamoDB container
 - added root user to gain permission to read/write data
 
-![HINT DynamoDB running locally]()
+![HINT DynamoDB running locally](/assets/Screenshot_20230223_190630.png)
 
 #### Postgres
 
@@ -293,5 +300,5 @@ add code snippet to `docker-compose.yml` file:
     db:
       driver:local
 ```
-![HINT Postgres container running]()
+![HINT Postgres container running](/assets/Screenshot_20230223_203005.png)
 
