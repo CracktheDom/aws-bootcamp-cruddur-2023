@@ -271,6 +271,10 @@ add code snippet to `docker-compose.yml` file:
       - '5432:5432'
     volumes: 
       - db:/var/lib/postgresql/data
+      
+  volumes:
+    db:
+      driver:local
 ```
 ![HINT Postgres container running]()
 
