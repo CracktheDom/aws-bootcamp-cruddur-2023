@@ -179,6 +179,8 @@ networks:
 - in the new code snippet that was added to file enter the following code:
 
 ```yaml
+...
+
   /api/activities/notifications:
     get:
       description: 'Return a feed of all of those that I follow'
@@ -194,6 +196,8 @@ networks:
                 type: array
                 items:
                   $ref: "#/components/schemas/Activity"
+                  
+...
 ```
 - create a `services/notifications_activities.py` file and insert following code:
 
@@ -230,6 +234,7 @@ class NotificationsActivities:
 ```yml
 from services.notifications_activities import *
 
+...
 @app.route("/api/activities/notifications", methods=['GET'])
 def data_notifications():
   data = NotificationsActivities.run()
@@ -242,8 +247,18 @@ def data_notifications():
 ![HINT screenshot of json object from new backend endpoint]()
 
 #### Map new frontend endpoint to new backend endpoint
-* in the frontend-react-js/src/App.js file append to file
-* create `frontend-react-js/pages/NotificationsFeedPage.js` & `frontend-react-js/pages/NotificationsFeedPage.css` files
+* append the frontend-react-js/src/App.js file with the following code:
+```yml
+import NotificationsFeedPage from './pages/NotificationsFeedPage';
+
+...
+  {
+    path: "/notifications",
+    element: <NotificationsFeedPage />
+  },
+```
+
+* create `./frontend-react-js/src/pages/NotificationsFeedPage.js` & `./frontend-react-js/src/pages/NotificationsFeedPage.css` files
 * copy contents from frontend-react-js/pages/HomeFeedPage.js to frontend-react-js/pages/NotificationsFeedPage.js & change references of home to notifications
 
 ![Hint screenshot of notifications page showing data from new backend endpoint]()
@@ -261,6 +276,7 @@ def data_notifications():
 add code snippet to `docker-compose.yml` file:
 
 ```yml
+...
   db:
     image: postgres:13-alpine
     restart: always
@@ -271,7 +287,8 @@ add code snippet to `docker-compose.yml` file:
       - '5432:5432'
     volumes: 
       - db:/var/lib/postgresql/data
-      
+...
+
   volumes:
     db:
       driver:local
