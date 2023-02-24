@@ -173,7 +173,7 @@ networks:
 - Click on url associated woth port 3000 to view front end of Cruddur app
 
 
-![Screenshot of frontend of Cruddur app running in browser]()
+![Screenshot of frontend of Cruddur app running in browser](/assets/Screenshot_20230223_044013.png)
 
 
 ### Create Notification Feature
@@ -251,7 +251,7 @@ def data_notifications():
 ![HINT screenshot of 404 error to new backend endpoint]()
 - Click on url associated with backend, port 4567 to view json object
 
-![HINT screenshot of json object from new backend endpoint]()
+![HINT screenshot of json object from new backend endpoint](/assets/Screenshot_20230223_155317.png)
 
 #### Map new frontend endpoint to new backend endpoint
 * append the frontend-react-js/src/App.js file with the following code:
@@ -272,7 +272,7 @@ import NotificationsFeedPage from './pages/NotificationsFeedPage';
 
 ### DynamoDB Local & Postgres
 #### DynamoDB
-![AWS docs to run DynamoDB locally](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBLocal.DownloadingAndRunning.html)
+[AWS docs to run DynamoDB locally](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBLocal.DownloadingAndRunning.html)
 - added Docker code to docker-compose.yml file to create DynamoDB container
 - added root user to gain permission to read/write data
 
