@@ -63,8 +63,8 @@ execute `docker image ls` to confirm that image was created
 ```bash
 docker run --rm -p 4567:4567 -it backend-flask:1.0
 ```
-* ensure port 4567 is unlocked in **PORTS** tab in Gitpod
-* navigate to url displayed in **PORTS**
+* ensure port 4567 is unlocked in the **PORTS** tab in Gitpod
+* navigate to url displayed in the **PORTS**
 * should see **404 Not Found** page and the server running in terminal should confirm this by displaying the same error code
 * stop container and run again with environment variable parameters
 * execute `docker ps` to view running containers with ID's
@@ -76,7 +76,7 @@ docker run --rm -p 4567:4567 -it backend-flask:1.0
 
 * stop container by pressing `Ctrl + c`
 * restart container with environment variable parameters `docker run --rm -p 4567:4567 -e FRONTEND_URL="*" -e BACKEND_URL="*" -it backend-flask:1.0`
-* navigate to url in **PORTS** tab in Gitpod, append `/api/activities/home` to url and json object will be visible in browser
+* navigate to url in the **PORTS** tab in Gitpod, append `/api/activities/home` to url and json object will be visible in browser
 
 ![HINT: screenshot of browser json object from bankend endpoint]()
 
@@ -153,7 +153,7 @@ services:
     ports:
       - "3000:3000"
     volumes:
-       - ./frontend-flask:/frontend-flask
+       - ./frontend-react-js:/frontend-react-js
        
 networks:
   internal-network:
@@ -171,11 +171,11 @@ networks:
 
 ### Create Notification Feature
 #### Create and map backend endpoint
-- In the frontend-react-js folder, make to execute `npm i` if not completed earlier, then right-click `docker-compose.yml` file and select **Docker Compose Up**
-- Ensure ports 3000 and 4567 are open/unlocked in **PORTS** tab
+- In the `frontend-react-js` folder, make to execute `npm i` if not completed earlier, then right-click `docker-compose.yml` file and select **Docker Compose Up**
+- Ensure ports 3000 and 4567 are open/unlocked in the **PORTS** tab
 - Click on link associated with port 3000
 - open `backend-flask/openapi-3.0.yml` file, then click on `OpenAPI` extension in the left rail
-- Click on ellipsis and click **Add**
+- Click on the ellipsis and click **Add**
 - in the new code snippet that was added to file enter the following code:
 
 ```yaml
@@ -225,7 +225,7 @@ class NotificationsActivities:
     ]
     return results
 ```
-- append to `app.py` file
+- append following code to `app.py` file
 
 ```yml
 from services.notifications_activities import *
@@ -236,9 +236,16 @@ def data_notifications():
   return data, 200
 ```
 
-![HINT screenshot of 404 error to backend endpoint]()
+![HINT screenshot of 404 error to new backend endpoint]()
 - Click on url associated with backend, port 4567 to view json object
 
-![HINT screenshot of json object from backend endpoint]()
+![HINT screenshot of json object from new backend endpoint]()
 
 #### Map new frontend endpoint to new backend endpoint
+* in the frontend-react-js/src/App.js file append to file
+* create `frontend-react-js/pages/NotificationsFeedPage.js` & `frontend-react-js/pages/NotificationsFeedPage.css` files
+* copy contents from frontend-react-js/pages/HomeFeedPage.js to frontend-react-js/pages/NotificationsFeedPage.js & change references of home to notifications
+
+![Hint screenshot of notifications page showing data from new backend endpoint]()
+
+
