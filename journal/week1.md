@@ -300,5 +300,15 @@ add code snippet to `docker-compose.yml` file:
     db:
       driver:local
 ```
+added code snippet to implement healthcheck for database:
+
+```yml
+    healthcheck:
+      test: ['CMD', 'pg_isready', '-U', 'postgres']
+      interval: 1s
+      timeout: 5s
+      retries: 10
+```
+
 ![HINT Postgres container running](/assets/Screenshot_20230223_203005.png)
 
