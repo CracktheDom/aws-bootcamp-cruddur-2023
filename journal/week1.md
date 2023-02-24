@@ -81,7 +81,7 @@ docker run --rm -p 4567:4567 -it backend-flask:1.0
 * restart container with environment variable parameters `docker run --rm -p 4567:4567 -e FRONTEND_URL="*" -e BACKEND_URL="*" -it backend-flask:1.0`
 * navigate to url in the **PORTS** tab in Gitpod, append `/api/activities/home` to url and json object will be visible in browser
 
-![HINT: screenshot of browser json object from backend endpoint](/assets/Screenshot_20230223_031445.png)
+![HINT: screenshot of browser json object from backend endpoint](/assets/Screenshot_20230223_031510.png)
 
 
 ### Get Images or Containers
