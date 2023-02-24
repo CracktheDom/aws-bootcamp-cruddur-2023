@@ -248,4 +248,29 @@ def data_notifications():
 
 ![Hint screenshot of notifications page showing data from new backend endpoint]()
 
+### DynamoDB Local & Postgres
+#### DynamoDB
+![AWS docs to run DynamoDB locally](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBLocal.DownloadingAndRunning.html)
+- added Docker code to docker-compose.yml file to create DynamoDB container
+- added root user to gain permission to read/write data
+
+![HINT DynamoDB running locally]()
+
+#### Postgres
+
+add code snippet to `docker-compose.yml` file:
+
+```yml
+  db:
+    image: postgres:13-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+    ports:
+      - '5432:5432'
+    volumes: 
+      - db:/var/lib/postgresql/data
+```
+![HINT Postgres container running]()
 
