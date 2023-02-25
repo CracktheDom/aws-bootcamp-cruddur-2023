@@ -24,8 +24,8 @@ python -m flask run --host=0.0.0.0 --port=4567
 
 ### Add Dockerfile
 
-Create a file here: `touch ./Dockerfile`
-Input the following into file:
+- Create a Dockerfile file here: `touch ./Dockerfile`
+- Input the following into file:
 
 ```sh
 FROM python:3.10-slim-buster
@@ -104,7 +104,7 @@ docker logs <CONTAINER_ID>
 ## Containerize Frontend
 
 ### Run NPM Install
-We have to execute the `npm install` command before building the container so that the contents of node_modules will be copied
+We have to execute the `npm install` command before building the frontend container so that the needed dependencies are present 
 ```bash
 cd frontend-react-js
 npm i
@@ -143,7 +143,7 @@ version: "3.8"
 services:
   backend-flask:
     environment:
-      FRONTEND_URL: "http://3001-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}"
+      FRONTEND_URL: "http://3000-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}"
       BACKEND_URL: "http://4567-${GITPOS_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}"
     build: ./backend-flask
     ports:
@@ -178,16 +178,15 @@ networks:
 
 ### Create Notification Feature
 #### Create and map backend endpoint
-- In the `frontend-react-js` folder, make to execute `npm i` if not completed earlier, then right-click `docker-compose.yml` file and select **Docker Compose Up**
+- In the `frontend-react-js` folder, execute this command `npm i`, if not completed earlier. 
+- Then right-click the `docker-compose.yml` file and select **Docker Compose Up**
 - Ensure ports 3000 and 4567 are open/unlocked in the **PORTS** tab
 - Click on link associated with port 3000
-- open `backend-flask/openapi-3.0.yml` file, then click on `OpenAPI` extension in the left rail
+- open the `backend-flask/openapi-3.0.yml` file in the Gitpod editor, then click on the `OpenAPI` extension in the left rail
 - Click on the ellipsis and click **Add**
-- in the new code snippet that was added to file enter the following code:
+- in the new code snippet that was added to the file enter the following code:
 
 ```yaml
-...
-
   /api/activities/notifications:
     get:
       description: 'Return a feed of all of those that I follow'
@@ -203,10 +202,8 @@ networks:
                 type: array
                 items:
                   $ref: "#/components/schemas/Activity"
-                  
-...
 ```
-- create a `services/notifications_activities.py` file and insert following code:
+- create a `services/notifications_activities.py` file and insert the following code:
 
 ```python
 from datetime import datetime, timedelta, timezone
@@ -239,13 +236,18 @@ class NotificationsActivities:
 - append following code to `app.py` file
 
 ```yml
+
+...
 from services.notifications_activities import *
+...
+
 
 ...
 @app.route("/api/activities/notifications", methods=['GET'])
 def data_notifications():
   data = NotificationsActivities.run()
   return data, 200
+...
 ```
 
 ![HINT screenshot of 404 error to new backend endpoint]()
