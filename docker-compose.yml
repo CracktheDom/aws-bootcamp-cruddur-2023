@@ -2,7 +2,7 @@ version: "3.8"
 services:
   backend-flask:
     environment:
-      FRONTEND_URL: "http://3001-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}"
+      FRONTEND_URL: "http://3000-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}"
       BACKEND_URL: "http://4567-${GITPOS_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}"
     build: ./backend-flask
     ports:
