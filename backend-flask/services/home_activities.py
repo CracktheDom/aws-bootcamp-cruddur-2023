@@ -7,7 +7,7 @@ class HomeActivities:
     def run():
         tracer = trace.get_tracer(__name__)
         with tracer.start_as_current_span("http-handler"):
-            with tracer.start_as_current_span("my-cool-function"):
+            with tracer.start_as_current_span("for-my-homies-function"):
                 now = datetime.now(timezone.utc).astimezone()
                 results = [{
                     'uuid': '68f126b0-1ceb-4a33-88be-d90fa7109eee',
