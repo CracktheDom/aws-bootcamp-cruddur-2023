@@ -17,6 +17,8 @@ services:
     environment:
       REACT_APP_BACKEND_URL: "http://4567-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}"
       OTEL_SERVICE_NAME: 'frontend-react-js'
+      OTEL_EXPORTER_OTLP_ENDPOINT: 'https://api.honeycomb.io'
+      OTEL_EXPORTER_OTLP_HEADERS: 'x-honeycomb-team=${HONEYCOMB_API_KEY}'
       OTEL_RESOURCE_ATTRIBUTES: service.name=frontend
     build: ./frontend-react-js
     ports:
