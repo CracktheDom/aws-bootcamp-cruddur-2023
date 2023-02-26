@@ -46,6 +46,6 @@ services:
     backend-flask:
         environment:
             OTEL_SERVICE_NAME: "backend-flask"
-            OTEL_EXPORTER_OTLP_ENDPOINT="https://api.honeycomb.io"
-            OTEL_EXPORTER_OTLP_HEADERS="x-honeycomb-team=${HONEYCOMB_API_KEY}"
+            OTEL_EXPORTER_OTLP_ENDPOINT: "https://api.honeycomb.io"
+            OTEL_EXPORTER_OTLP_HEADERS: "x-honeycomb-team=${HONEYCOMB_API_KEY}"
 ```
