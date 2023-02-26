@@ -1,6 +1,6 @@
 # Week 2 — Distributed Tracing
-## Configuring Cruddur to send data to Honeycomb
-!(https://ui.honeycomb.io/bellefleurtech/environments/test/send-data#)
+## Configure Cruddur to send data to Honeycomb.io
+!(https://docs.honeycomb.io/getting-data-in/opentelemetry/python/)
 - install the following Python packages
 
 ```
@@ -34,10 +34,18 @@ app = Flask(__name__)
 FlaskInstrumentor().instrument_app(app)
 RequestsInstrumentor().instrument()
 ```
-- configure opentelemetry
+- configure opentelemetry by setting environment variables
 
 ```sh
-export OTEL_EXPORTER_OTLP_ENDPOINT="https://api.honeycomb.io"
-export OTEL_EXPORTER_OTLP_HEADERS="x-honeycomb-team=${HONEYCOMB_API_KEY}"
-export OTEL_SERVICE_NAME="your-service-name"
+export HONEYCOMB_API_KEY="Honeycomb API key goes here" 
+```
+- update docker-compose.yml file 
+
+```yaml
+services:
+    backend-flask:
+        environment:
+            OTEL_SERVICE_NAME: "backend-flask"
+            OTEL_EXPORTER_OTLP_ENDPOINT="https://api.honeycomb.io"
+            OTEL_EXPORTER_OTLP_HEADERS="x-honeycomb-team=${HONEYCOMB_API_KEY}"
 ```
