@@ -16,8 +16,8 @@ services:
   frontend-react-js:
     environment:
       REACT_APP_BACKEND_URL: "http://4567-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}"
-        OTEL_SERVICE_NAME: 'frontend-react-js'
-        OTEL_RESOURCE_ATTRIBUTES: service.name=frontend
+      OTEL_SERVICE_NAME: 'frontend-react-js'
+      OTEL_RESOURCE_ATTRIBUTES: service.name=frontend
     build: ./frontend-react-js
     ports:
       - "3000:3000"
