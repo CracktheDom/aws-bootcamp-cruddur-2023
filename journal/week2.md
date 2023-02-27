@@ -64,23 +64,28 @@ services:
 
 ### Acquire a tracer and create a span
 - append backend-flask/services/home_activities.py
+- insert sample code from [docs.honeycomb.io](https://docs.honeycomb.io/getting-data-in/opentelemetry/python/#configure-and-run) into the class method, run()
 
 ```python
+# Honeycomb --------
 from opentelemetry import trace
 
+
+tracer = trace.get_tracer("home.activities")
+
+class HomeActivities:
+    def run():
+        with tracer.start_as_current_span("home-activities-mock-data") as inner_span:
+            span = trace.get_current_span()
+            now = datetime.now(timezone.utc).astimezone()
+            span.set_attribute("app.now", now.isoformat())
+            results = [{
+                'uuid': '68f126b0-1ceb-4a33-88be-d90fa7109eee',
+
 ...
-
-tracer = trace.get_tracer("home_activities")
-
-class HomeActivities():
-    with tracer.start_as_current_span("home_activities_mock_data") as inner_span:
-        inner_span.set_attribute("inner", True)
-
-    ...
-
-    span = trace.get_current_span()
-    span.set_attribute("user.id", user.id())
-
-
+            ]
+            span = trace.get_current_span()
+            span.set_attribute("app.result_length", len(results))
+            return results
 ```
 -  
