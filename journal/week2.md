@@ -93,3 +93,6 @@ class HomeActivities:
 
 ### Query Honeycomb.io database engine
 - heatmap, P90, count
+
+## CloudWatch Logs
+- insert watchtower in the backend-flask/requirements.txt file to install watchtower
