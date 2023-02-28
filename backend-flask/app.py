@@ -25,19 +25,19 @@ from opentelemetry.sdk.trace.export import SimpleSpanProcessor
 from opentelemetry.sdk.trace.export import ConsoleSpanExporter
 
 # --- CloudWatch ---
-import watchtower
-import logging
-from time import strftime
+# import watchtower
+# import logging
+# from time import strftime
 
 
 # Configuring Logger to use CloudWatch
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
-console_handler = logging.StreamHandler()
-cw_handler = watchtower.CloudWatchLogHandler(log_group="cruddur")
-logger.addHandler(console_handler)
-logger.addHandler(cw_handler)
-logger.info("test log")
+# logger = logging.getLogger(__name__)
+# logger.setLevel(logging.DEBUG)
+# console_handler = logging.StreamHandler()
+# cw_handler = watchtower.CloudWatchLogHandler(log_group="cruddur")
+# logger.addHandler(console_handler)
+# logger.addHandler(cw_handler)
+# logger.info("test log")
 
 # Honeycomb ----
 # Initialize tracing and an exporter that can send data to Honeycomb
