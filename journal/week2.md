@@ -41,7 +41,7 @@ app = Flask(__name__)
 FlaskInstrumentor().instrument_app(app)
 RequestsInstrumentor().instrument()
 ```
-- configure opentelemetry by setting environment variables
+### configure opentelemetry by setting environment variables
 
 ```sh
 export HONEYCOMB_API_KEY="Honeycomb API key goes here" 
@@ -88,4 +88,8 @@ class HomeActivities:
             span.set_attribute("app.result_length", len(results))
             return results
 ```
--  
+-  navigate to BACKEND_URL/api/activities/home several times to send data to Honeycomb API endpoint
+-  navigate to ui.honeycomb.io and click on **Home** tab to view spans
+
+### Query Honeycomb.io database engine
+- heatmap, P90, count
