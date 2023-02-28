@@ -95,4 +95,20 @@ class HomeActivities:
 - heatmap, P90, count
 
 ## CloudWatch Logs
-- insert watchtower in the backend-flask/requirements.txt file to install watchtower
+- insert watchtower in the `backend-flask/requirements.txt` file to install watchtower
+- update backend/app.py
+
+```python
+
+```
+- update `backend-flask/services/home_activities.py`
+
+```python
+
+```
+- update `docker-compose.yml`
+
+```yaml
+
+```
+- navigate to BACKEND_URL/api/activities/home, then login to AWS Management Console and navigate to **CloudWatch** > **Log groups** > **cruddur** to log files
