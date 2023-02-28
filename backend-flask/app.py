@@ -24,6 +24,20 @@ from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from opentelemetry.sdk.trace.export import SimpleSpanProcessor
 from opentelemetry.sdk.trace.export import ConsoleSpanExporter
 
+# --- CloudWatch ---
+import watchtower
+import logging
+from time import strftime
+
+
+# Configuring Logger to use CloudWatch
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+console_handler = logging.StreamHandler()
+cw_handler = watchtower.CloudWatchLogHandler(log_group="cruddur")
+logger.addHandler(console_handler)
+logger.addHandler(cw_handler)
+logger.info("test log")
 
 # Honeycomb ----
 # Initialize tracing and an exporter that can send data to Honeycomb
@@ -52,6 +66,12 @@ cors = CORS(
   allow_headers="content-type,if-modified-since",
   methods="OPTIONS,GET,HEAD,POST"
 )
+
+@app.after_request
+def after_request(response):
+  timestamp = strftime('[%Y-%b-%d %H:%M]')
+  logger.error(f"{timestamp} {request.remote_addr} {request.method} {request.scheme} {request.full_path} {response.status}")
+  return response
 
 @app.route("/api/message_groups", methods=['GET'])
 def data_message_groups():
@@ -90,7 +110,7 @@ def data_create_message():
 
 @app.route("/api/activities/home", methods=['GET'])
 def data_home():
-  data = HomeActivities.run()
+  data = HomeActivities.run(logger=logger)
   return data, 200
 
 

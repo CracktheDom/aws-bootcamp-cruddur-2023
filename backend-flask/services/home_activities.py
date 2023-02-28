@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta, timezone
+import logging
 
 # Honeycomb --------
 from opentelemetry import trace
@@ -7,7 +8,8 @@ from opentelemetry import trace
 tracer = trace.get_tracer("home.activities")
 
 class HomeActivities:
-    def run():
+    def run(logger):
+        logger.info("HomeActivities")
         with tracer.start_as_current_span("home-activities-mock-data") as inner_span:
             span = trace.get_current_span()
             now = datetime.now(timezone.utc).astimezone()
