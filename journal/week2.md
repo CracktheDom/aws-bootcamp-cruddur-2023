@@ -207,7 +207,7 @@ service:
       AWS_XRAY_DAEMON_ADDRESS: "xray-daemon:2000"
 ...
 xray-daemon:
-  image: "amazon-xray-daemon"
+  image: "amazon/aws-xray-daemon"
   environment:
     AWS_ACCESS_KEY_ID: "${AWS_ACCESS_KEY_ID}"
     AWS_SECRET_ACCESS_KEY: "${AWS_SECRET_ACCESS_KEY}"
