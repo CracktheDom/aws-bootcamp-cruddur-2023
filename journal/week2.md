@@ -99,16 +99,58 @@ class HomeActivities:
 - update backend/app.py
 
 ```python
+...
+--- CloudWatch ---
+import watchtower
+import logging
+from time import strftime
 
+
+Configuring Logger to use CloudWatch
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+console_handler = logging.StreamHandler()
+cw_handler = watchtower.CloudWatchLogHandler(log_group="cruddur")
+logger.addHandler(console_handler)
+logger.addHandler(cw_handler)
+logger.info("test log")
+...
+
+@app.after_request
+def after_request(response):
+  timestamp = strftime('[%Y-%b-%d %H:%M]')
+  logger.error(f"{timestamp} {request.remote_addr} {request.method} {request.scheme} {request.full_path} {response.status}")
+  return response
+  
+@app.route("/api/activities/home", methods=['GET'])
+def data_home():
+  data = HomeActivities.run(logger=logger)
+  return data, 200
+...
 ```
 - update `backend-flask/services/home_activities.py`
 
 ```python
-
+...
+class HomeActivities:
+  def run(logger):
+    logger.info("HomeActivities")
+      with tracer.start_as_current_span("home-activities-mock-data") as inner_span:
+        span = trace.get_current_span()
+...
 ```
 - update `docker-compose.yml`
 
 ```yaml
+services:
+    backend-flask:
+        environment:
+...
 
+      AWS_DEFAULT_REGION: "${AWS_DEFAULT_REGION}"
+      AWS_ACCESS_KEY_ID: "${AWS_ACCESS_KEY_ID}"
+      AWS_SECRET_ACCESS_KEY: "${AWS_SECRET_ACCESS_KEY}"
 ```
 - navigate to BACKEND_URL/api/activities/home, then login to AWS Management Console and navigate to **CloudWatch** > **Log groups** > **cruddur** to log files
+
+![HINT pics of CloudWatch Log Group created & displaying logs]()
