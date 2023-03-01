@@ -164,6 +164,7 @@ services:
 ---- AWS XRay ----
 from aws_xray_sdk.core import xray_recorder
 from aws_xray_sdk.core.ext.flask.middleware import XRayMiddleware
+...
 
 xray_url = os.getenv("AWS_XRAY_URL")
 xray_recorder.configure(service="backend-flask", dynamic_naming=xray_url)
@@ -190,7 +191,7 @@ XRayMiddleware = (app, xray_recorder)
   }
 }
 ```
-- create an XRay group via in the AWS CLI
+- create an XRay group via the AWS CLI
 
 ```bash
 aws xray create-group --group-name "Cruddur" --filter-expression "service(\"backend-flask\")"
