@@ -154,3 +154,44 @@ services:
 - navigate to BACKEND_URL/api/activities/home, then login to AWS Management Console and navigate to **CloudWatch** > **Log groups** > **cruddur** to log files
 
 ![HINT pics of CloudWatch Log Group created & displaying logs]()
+
+## Instrument XRay
+- append backend-flask/requirements.txt with aws-xray-sdk
+- update app.py
+
+```python
+...
+---- AWS XRay ----
+from aws_xray_sdk.core import xray_recorder
+from aws_xray_sdk.core.ext.flask.middleware import XRayMiddleware
+
+xray_url = os.getenv("AWS_XRAY_URL")
+xray_recorder.configure(service="backend-flask", dynamic_naming=xray_url)
+XRayMiddleware = (app, xray_recorder)
+
+...
+```
+- create a aws/json/xray.json file with the following contents:
+
+```json
+{
+  "SamplingRule": {
+    "RuleName": "Cruddur",
+    "ResourcesARN": "*",
+    "Priority": 9000,
+    "FixedRate": 0.1,
+    "ResevoirSize": 5,
+    "ServiceName": "backend-flask",
+    "ServiceType": "*",
+    "Host": "*",
+    "HTTPMethod": "*",
+    "URLPath": "*",
+    "Version": 1
+  }
+}
+```
+- create an XRay group via in the AWS CLI
+
+```bash
+aws xray create-group --group-name "Cruddur" --filter-expression "service(\"backend-flask\")"
+```
