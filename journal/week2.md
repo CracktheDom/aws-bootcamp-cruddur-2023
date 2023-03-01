@@ -156,7 +156,7 @@ services:
 ![HINT pics of CloudWatch Log Group created & displaying logs]()
 
 ## Instrument XRay
-- append backend-flask/requirements.txt with aws-xray-sdk
+- append backend-flask/requirements.txt with **aws-xray-sdk**
 - update app.py
 
 ```python
@@ -172,7 +172,7 @@ XRayMiddleware = (app, xray_recorder)
 
 ...
 ```
-- create a aws/json/xray.json file with the following contents:
+- create a `aws/json/xray.json` file with the following contents:
 
 ```json
 {
@@ -195,4 +195,25 @@ XRayMiddleware = (app, xray_recorder)
 
 ```bash
 aws xray create-group --group-name "Cruddur" --filter-expression "service(\"backend-flask\")"
+```
+
+- add XRay daemon and related environment variables to docker-compose.yml
+
+```yml
+service:
+  backend-flask:
+    environment:
+      AWS_XRAY_URL: "*4567-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}"
+      AWS_XRAY_DAEMON_ADDRESS: "xray-daemon:2000"
+...
+xray-daemon:
+  image: "amazon-xray-daemon"
+  environment:
+    AWS_ACCESS_KEY_ID: "${AWS_ACCESS_KEY_ID}"
+    AWS_SECRET_ACCESS_KEY: "${AWS_SECRET_ACCESS_KEY}"
+    AWS_REGION: "${AWS_DEFAULT_REGION}"
+  command:
+    - "xray -o -b xray-daemon:2000"
+  ports:
+    - 2000:2000/udp
 ```
