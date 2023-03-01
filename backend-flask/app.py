@@ -24,9 +24,9 @@ from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from opentelemetry.sdk.trace.export import SimpleSpanProcessor
 from opentelemetry.sdk.trace.export import ConsoleSpanExporter
 
----- AWS XRay ----
+# ---- AWS XRay ----
 from aws_xray_sdk.core import xray_recorder
-from aws_xray_sdk.core.ext.flask.middleware import XRayMiddleware
+from aws_xray_sdk.ext.flask.middleware import XRayMiddleware
 
 # --- CloudWatch ---
 # import watchtower
