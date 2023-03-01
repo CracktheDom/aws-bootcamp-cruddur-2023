@@ -67,7 +67,7 @@ services:
       AWS_SECRET_ACCESS_KEY: "${AWS_SECRET_ACCESS_KEY}"
       AWS_REGION: "${AWS_DEFAULT_REGION}"
     command:
-      - "xray -0 -b xray-daemon:2000"
+      - "xray --local-mode --bind xray-daemon:2000"
     ports:
       - 2000:2000/udp      
           
