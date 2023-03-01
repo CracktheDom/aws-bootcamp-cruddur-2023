@@ -24,6 +24,10 @@ from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from opentelemetry.sdk.trace.export import SimpleSpanProcessor
 from opentelemetry.sdk.trace.export import ConsoleSpanExporter
 
+---- AWS XRay ----
+from aws_xray_sdk.core import xray_recorder
+from aws_xray_sdk.core.ext.flask.middleware import XRayMiddleware
+
 # --- CloudWatch ---
 # import watchtower
 # import logging
@@ -44,7 +48,6 @@ from opentelemetry.sdk.trace.export import ConsoleSpanExporter
 provider = TracerProvider()
 processor = BatchSpanProcessor(OTLPSpanExporter())
 provider.add_span_processor(processor)
-
 
 # Show this in the logs within backend-flask app
 simple_processor = SimpleSpanProcessor(ConsoleSpanExporter())
@@ -67,6 +70,12 @@ cors = CORS(
   methods="OPTIONS,GET,HEAD,POST"
 )
 
+# ---- XRay ----
+xray_url = os.getenv("AWS_XRAY_URL")
+xray_recorder.configure(service="backend-flask", dynamic_naming=xray_url)
+XRayMiddleware = (app, xray_recorder)
+
+# ---- CloudWatch ----
 # @app.after_request
 # def after_request(response):
 #   timestamp = strftime('[%Y-%b-%d %H:%M]')
