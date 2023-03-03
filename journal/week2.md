@@ -50,11 +50,11 @@ export HONEYCOMB_API_KEY="Honeycomb API key goes here"
 
 ```yaml
 services:
-    backend-flask:
-        environment:
-            OTEL_SERVICE_NAME: "backend-flask"
-            OTEL_EXPORTER_OTLP_ENDPOINT: "https://api.honeycomb.io"
-            OTEL_EXPORTER_OTLP_HEADERS: "x-honeycomb-team=${HONEYCOMB_API_KEY}"
+  backend-flask:
+    environment:
+      OTEL_SERVICE_NAME: "backend-flask"
+      OTEL_EXPORTER_OTLP_ENDPOINT: "https://api.honeycomb.io"
+      OTEL_EXPORTER_OTLP_HEADERS: "x-honeycomb-team=${HONEYCOMB_API_KEY}"
 ```
 - run frontend and backend containers by running docker compose up on the docker-compose.yml file
 - navigate to backend /api/activites/home and /api/activites/notificaations endpoint to generate date to send to Honeycomb API endpoint
@@ -118,14 +118,14 @@ logger.info("test log")
 
 @app.after_request
 def after_request(response):
-  timestamp = strftime('[%Y-%b-%d %H:%M]')
-  logger.error(f"{timestamp} {request.remote_addr} {request.method} {request.scheme} {request.full_path} {response.status}")
-  return response
+    timestamp = strftime('[%Y-%b-%d %H:%M]')
+    logger.error(f"{timestamp} {request.remote_addr} {request.method} {request.scheme} {request.full_path} {response.status}")
+    return response
   
 @app.route("/api/activities/home", methods=['GET'])
 def data_home():
-  data = HomeActivities.run(logger=logger)
-  return data, 200
+    data = HomeActivities.run(logger=logger)
+    return data, 200
 ...
 ```
 - update `backend-flask/services/home_activities.py`
@@ -133,18 +133,18 @@ def data_home():
 ```python
 ...
 class HomeActivities:
-  def run(logger):
-    logger.info("HomeActivities")
-      with tracer.start_as_current_span("home-activities-mock-data") as inner_span:
-        span = trace.get_current_span()
+    def run(logger):
+        logger.info("HomeActivities")
+            with tracer.start_as_current_span("home-activities-mock-data") as inner_span:
+                span = trace.get_current_span()
 ...
 ```
 - update `docker-compose.yml`
 
 ```yaml
 services:
-    backend-flask:
-        environment:
+  backend-flask:
+    environment:
 ...
 
       AWS_DEFAULT_REGION: "${AWS_DEFAULT_REGION}"
