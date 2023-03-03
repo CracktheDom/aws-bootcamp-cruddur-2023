@@ -61,7 +61,7 @@ services:
 ```docker compose -f "docker-compose.yml" up -d --build```
 
 - navigate to `BACKEND_URL/api/activites/home` and `BACKEND_URL/api/activites/notifications` endpoints to generate date to send to Honeycomb API endpoint
-- go to [Honeycomb.io UI](https:iu.honeycomb.io) to view dataset
+- go to [Honeycomb.io UI](https://ui.honeycomb.io) to view dataset
 
 ![HINT show visuals of spans from Honeycomb.io]
 
