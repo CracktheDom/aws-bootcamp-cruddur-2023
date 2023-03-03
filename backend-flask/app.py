@@ -1,7 +1,7 @@
+import os
 from flask import Flask
 from flask import request
 from flask_cors import CORS, cross_origin
-import os
 
 from services.home_activities import *
 from services.notifications_activities import *
@@ -73,7 +73,7 @@ cors = CORS(
 # ---- XRay ----
 xray_url = os.getenv("AWS_XRAY_URL")
 xray_recorder.configure(service="backend-flask", dynamic_naming=xray_url)
-XRayMiddleware = (app, xray_recorder)
+XRayMiddleware(app, xray_recorder)
 
 # ---- CloudWatch ----
 # @app.after_request
@@ -162,7 +162,7 @@ def data_activities():
 
 @app.route("/api/activities/<string:activity_uuid>", methods=['GET'])
 def data_show_activity(activity_uuid):
-  data = ShowActivity.run(activity_uuid=activity_uuid)
+  data = ShowActivities.run(activity_uuid=activity_uuid)
   return data, 200
 
 @app.route("/api/activities/<string:activity_uuid>/reply", methods=['POST','OPTIONS'])
