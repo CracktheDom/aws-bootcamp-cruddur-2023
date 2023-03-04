@@ -99,7 +99,7 @@ class HomeActivities:
 
 ## CloudWatch Logs
 - insert **watchtower** in the `backend-flask/requirements.txt` file to install the package and dependencies
-- update `backend/app.py`
+- update `backend-flask/app.py`
 
 ```python
 ...
