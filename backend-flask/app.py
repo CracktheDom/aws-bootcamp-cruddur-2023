@@ -89,6 +89,9 @@ cors = CORS(
 
 # --- Rollbar ---
 rollbar_access_token = os.getenv('ROLLBAR_ACCESS_TOKEN')
+rollbar.configure(log_level="warning")
+rollbar.configure(extra_data={"user_id": "Fifty_Pence"})
+rollbar.configure(max_payload_size=1024)
 
 @app.before_first_request
 def init_rollbar():
