@@ -18,7 +18,7 @@ python -m flask run --host=0.0.0.0 --port=4567
 - make sure port 4567 is open/unlocked via Gitpod **PORTS** tab
 - click on url in **PORTS** tab
 - and append `/api/activities/home` to url
-- json object will be visible in browser
+- JSON object will be visible in browser
 
 ![HINT input url for json response](/assets/Screenshot_20230223_020228.png)
 
@@ -164,7 +164,7 @@ networks:
     driver: bridge
     name: cruddur
 ```
-- Right-click `docker-compose.yml` file and select **Docker Compose Up**
+- Right-click `docker-compose.yml` file and select **Docker Compose Up** to run containers
 - Execute `docker ps` to view running containers for frontend and backend
 
 ![Hint screenshot of docker ps command showing containers running](/assets/Screenshot_20230223_043705.png)
@@ -173,7 +173,7 @@ networks:
 - Click on url associated woth port 3000 to view front end of Cruddur app
 
 
-![Screenshot of frontend of Cruddur app running in browser](/assets/Screenshot_20230223_044013.png)
+![Screenshot of frontend of Cruddur app running in browser](/assets/Screenshot_20230303_222141.png)
 
 
 ### Create Notification Feature
@@ -203,7 +203,7 @@ networks:
                 items:
                   $ref: "#/components/schemas/Activity"
 ```
-- create a `services/notifications_activities.py` file and insert the following code:
+- create a `backend-flask/services/notifications_activities.py` file and insert the following code:
 
 ```python
 from datetime import datetime, timedelta, timezone
@@ -243,20 +243,27 @@ from services.notifications_activities import *
 
 
 ...
+
+@app.route("/api/activities/home", methods=['GET'])
+@cross_origin()
+def data_home():
+  data = HomeActivities.run()
+  return data, 200
+
 @app.route("/api/activities/notifications", methods=['GET'])
+@cross_origin()
 def data_notifications():
   data = NotificationsActivities.run()
   return data, 200
 ...
 ```
+***CORS should be enabled for the entire app by calling CORS(app), I was only able to utilize CORS by adding cross_origin() method to routes***
+- Click on url associated with backend, port 4567 to view JSON object
 
-![HINT screenshot of 404 error to new backend endpoint]()
-- Click on url associated with backend, port 4567 to view json object
-
-![HINT screenshot of json object from new backend endpoint](/assets/Screenshot_20230223_155317.png)
+![HINT screenshot of JSON object from new backend endpoint](/assets/Screenshot_20230223_155317.png)
 
 #### Map new frontend endpoint to new backend endpoint
-* append the frontend-react-js/src/App.js file with the following code:
+* append the `frontend-react-js/src/App.js` file with the following code:
 ```yml
 import NotificationsFeedPage from './pages/NotificationsFeedPage';
 
@@ -267,10 +274,10 @@ import NotificationsFeedPage from './pages/NotificationsFeedPage';
   },
 ```
 
-* create `./frontend-react-js/src/pages/NotificationsFeedPage.js` & `./frontend-react-js/src/pages/NotificationsFeedPage.css` files
-* copy contents from frontend-react-js/pages/HomeFeedPage.js to frontend-react-js/pages/NotificationsFeedPage.js & change references of home to notifications
+* create `frontend-react-js/src/pages/NotificationsFeedPage.js` & `frontend-react-js/src/pages/NotificationsFeedPage.css` files
+* copy contents from `frontend-react-js/pages/HomeFeedPage.js` to `frontend-react-js/pages/NotificationsFeedPage.js` & change references of home to notifications
 
-![Hint screenshot of notifications page showing data from new backend endpoint]()
+![Hint screenshot of notifications page showing data from new backend endpoint](/assets/Screenshot_20230303_222202.png)
 
 ### DynamoDB Local & Postgres
 #### DynamoDB
