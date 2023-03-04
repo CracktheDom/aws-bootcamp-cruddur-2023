@@ -113,12 +113,14 @@ def data_create_message():
   return model['data'], 200
 
 @app.route("/api/activities/home", methods=['GET'])
+@cross_origin()
 def data_home():
   data = HomeActivities.run()  # enter logger=logger as a parameter to enable logging to CloudWatch
   return data, 200
 
 
 @app.route("/api/activities/notifications", methods=['GET'])
+@cross_origin()
 def data_notifications():
   data = NotificationsActivities.run()
   return data, 200
