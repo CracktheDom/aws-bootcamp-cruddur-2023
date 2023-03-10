@@ -79,7 +79,7 @@ docker run --rm -p 4567:4567 -it backend-flask:1.0
 
 * stop container by pressing `Ctrl + c`
 * restart container with environment variable parameters `docker run --rm -p 4567:4567 -e FRONTEND_URL="*" -e BACKEND_URL="*" -it backend-flask:1.0`
-* navigate to url in the **PORTS** tab in Gitpod, append `/api/activities/home` to url and json object will be visible in browser
+* navigate to url in the **PORTS** tab in Gitpod, append `/api/activities/home` to url and JSON object will be visible in browser
 
 ![HINT: screenshot of browser json object from backend endpoint](/assets/Screenshot_20230223_031510.png)
 
@@ -97,6 +97,7 @@ curl -X GET "http://localhost:4567/api/activities/home" -H "Accept: application/
 ### Check Container logs
 ```bash
 docker logs <CONTAINER_ID>
+docker logs <CONTAINER_NAME>
 ```
 ### Get Running Container ID to store in Environment Variable
 `CONTAINER_ID=$(docker ps -q backend-flask:1.0)`
