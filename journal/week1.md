@@ -60,7 +60,7 @@ execute `docker image ls` to confirm that image was created
 
 ### Run Container
 
-```bash
+```sh
 docker run --rm -p 4567:4567 -it backend-flask:1.0
 ```
 * ensure port 4567 is unlocked in the **PORTS** tab in Gitpod
@@ -86,11 +86,11 @@ docker run --rm -p 4567:4567 -it backend-flask:1.0
 
 ### Get Images or Containers
 
-`docker ps -a` displays running containers
-`docker image ls -a` displays downloads images
+- `docker ps -a` displays running containers
+- `docker image ls -a` displays downloaded images
 
-### Send curl to Test Server
-```bash
+### Use curl command to Test Flask Server
+```sh
 curl -X GET "http://localhost:4567/api/activities/home" -H "Accept: application/json" -H "Content-Type: application/json"
 ```
 
@@ -104,13 +104,13 @@ docker logs <CONTAINER_ID>
 ## Containerize Frontend
 
 ### Run NPM Install
-We have to execute the `npm install` command before building the frontend container so that the needed dependencies are present 
-```bash
+We have to execute the `npm install` command before building the frontend container so that the needed dependencies are present before building container
+```sh
 cd frontend-react-js
 npm i
 ```
 ### Create a Dockerfile
-```bash
+```sh
 touch ./Dockerfile
 ```
 Enter following code into `Dockerfile`:
@@ -127,7 +127,7 @@ EXPOSE ${PORT}
 CMD ["npm", "start"]
 ```
 ### Build Container
-```bash
+```sh
 cd ..
 docker build -t frontend-reack-js:1.0 ./frontend-react-js
 ```
@@ -170,7 +170,7 @@ networks:
 ![Hint screenshot of docker ps command showing containers running](/assets/Screenshot_20230223_043705.png)
 
 - Ensure port 3000 & 4567 are unlocked/made public
-- Click on url associated woth port 3000 to view front end of Cruddur app
+- Click on url associated with port 3000 to view front end of Cruddur app
 
 
 ![Screenshot of frontend of Cruddur app running in browser](/assets/Screenshot_20230303_222141.png)
@@ -179,8 +179,8 @@ networks:
 ### Create Notification Feature
 #### Create and map backend endpoint
 - In the `frontend-react-js` folder, execute this command `npm i`, if not completed earlier. 
-- Then right-click the `docker-compose.yml` file and select **Docker Compose Up**
-- Ensure ports 3000 and 4567 are open/unlocked in the **PORTS** tab
+- Then right-click the `docker-compose.yml` file and select **Docker Compose Up** to run containers
+- While containers are running, ensure ports 3000 and 4567 are open/unlocked in the **PORTS** tab
 - Click on link associated with port 3000
 - open the `backend-flask/openapi-3.0.yml` file in the Gitpod editor, then click on the `OpenAPI` extension in the left rail
 - Click on the ellipsis and click **Add**
@@ -233,7 +233,7 @@ class NotificationsActivities:
     ]
     return results
 ```
-- append following code to `app.py` file
+- append the following code to `app.py` file
 
 ```yml
 
