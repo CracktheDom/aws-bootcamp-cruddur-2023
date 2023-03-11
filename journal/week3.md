@@ -32,3 +32,60 @@ Amplify.configure({
   }
 })
 ```
+* added the relevant amplify environment variables to `docker-compose.yml` file
+
+```yaml
+  frontend-react-js:
+    environment:
+      REACT_APP_AWS_PROJECT_REGION: "${AWS_DEFAULT_REGION}"
+      REACT_APP_AWS_COGNITO_ID: "*"
+      REACT_APP_AWS_COGNITO_REGION: "${AWS_DEFAULT_REGION}"
+      REACT_APP_AWS_USER_POOLS_ID: "us-east-2_fjgjtuh"
+      REACT_APP_CLIENT_ID: "76ytuhju980kiojly934fdgp"
+```
+#### Conditionally show components based on whether user is logged in or not
+* Navigate to `frontend-react-js/src/pages/HomeFeedPage.js` and append the file with the following code:
+
+```js
+import { Amplify } from 'aws-amplify'; 
+...
+
+  const checkAuth = async () => {
+    console.log('checkAuth')
+    // [TODO] Authenication
+    Auth.currentAuthenicatedUser({
+      // Optional, By default is false.
+      // If set to true, this call will send a 
+      // request to Cognito to get the latest user data
+      bypassCache: false
+    })
+    .then((user) => {
+      console.log('user', user);
+      return Auth.currentAuthenticatedUser()
+    }).then((cognito_user) => {
+      setUser({
+        display_name: cognito_user.attributes.name,
+        handle: cognito_user.attributes.preferred_username
+      })
+    })
+    .catch((err) => console.log(err));
+  };
+```
+discuss which sections of frontend will be displayed or hidden when user logs in
+
+* Next, in the `frontend-react-js/src/components/ProfileInfo.js` file, add import statement & replace the code block that contains cookie with the following code:
+
+```js
+import { Amplify } from 'aws-amplify'; 
+...
+
+  const signOut = async () => {
+    try {
+        await Auth.signOut({ global: true });
+        window.location.href = "/"
+    } catch (error) {
+      console.log('error signing out: ', error);
+    }
+  }
+```
+
