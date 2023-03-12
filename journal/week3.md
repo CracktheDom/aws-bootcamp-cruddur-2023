@@ -89,3 +89,29 @@ import { Amplify } from 'aws-amplify';
   }
 ```
 
+* Navigate to `frontend-react-js/src/pages/SigninPage.js` and remove the cookie import statement & append the file with the following code:
+
+```js
+import { Auth } from 'aws-amplify';
+...
+
+  const onsubmit = async (event) => {
+    event.preventDefault();
+    setErrors('')
+    try {
+      Auth.signIn(email, password)
+        .then(user => {
+          localStorage.setItem("access_token", user.signInUserSession.accessToken.jwtToken)
+          window.location.href = "/"                               
+        })
+        .catch(err => { console.log('Error!', err) });
+    } catch (error) {
+      if (error.code == 'UserNotConfirmedException') {
+        window.location.href = "/confirm"
+      }
+      setErrors(error.message)
+    }
+    return false
+  }
+```
+
