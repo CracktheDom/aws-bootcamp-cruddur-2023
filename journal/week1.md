@@ -204,7 +204,8 @@ networks:
                 items:
                   $ref: "#/components/schemas/Activity"
 ```
-- create a `backend-flask/services/notifications_activities.py` file and insert the following code:
+- create a `backend-flask/services/notifications_activities.py` file by executing `touch backend-flask/services/notifications_activities.py`
+- and insert the following code:
 
 ```python
 from datetime import datetime, timedelta, timezone
@@ -234,7 +235,7 @@ class NotificationsActivities:
     ]
     return results
 ```
-- append the following code to `app.py` file
+- append the following code to the `app.py` file
 
 ```yml
 
@@ -259,7 +260,7 @@ def data_notifications():
 ...
 ```
 ***CORS should be enabled for the entire app by calling CORS(app), I was only able to utilize CORS by adding cross_origin() method to routes***
-- Click on url associated with backend, port 4567 to view JSON object
+- Click on `$BACKEND_URL/api/activities/notifications` to view JSON object
 
 ![HINT screenshot of JSON object from new backend endpoint](/assets/Screenshot_20230223_155317.png)
 
