@@ -71,7 +71,7 @@ cors = CORS(
   app, 
   resources={r"/api/*": {"origins": origins}},
   headers=["Content-Type", "Authorization"],
-  expose_headers="location,link",
+  expose_headers="location,link,Authorization",
   allow_headers="content-type,if-modified-since",
   methods="OPTIONS,GET,HEAD,POST"
 )
@@ -157,6 +157,8 @@ def data_create_message():
 @app.route("/api/activities/home", methods=['GET'])
 @cross_origin()
 def data_home():
+  app.logger.debug('AUTH HEADER')
+  # app.logger.debug(request.headers.get('Authorization'))
   data = HomeActivities.run()  # enter logger=logger as a parameter to enable logging to CloudWatch
   return data, 200
 
