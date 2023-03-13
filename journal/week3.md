@@ -148,6 +148,6 @@ import { Auth } from 'aws-amplify';
 * Enter email address and password and check the box for **Mark email address as verified**
 * Click on **Create user** button
 
-#### Go to Cruddur signin page
-* Sign in the same credentials used on the Cognito **Create user** page
+#### Go to Cruddur Sign In Page
+* Sign in the with same credentials used on the Cognito **Create user** page
 
