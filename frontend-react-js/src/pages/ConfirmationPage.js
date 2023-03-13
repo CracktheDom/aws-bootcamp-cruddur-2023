@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import {ReactComponent as Logo} from '../components/svg/logo.svg';
 
 // [TODO] Authenication
-import Cookies from 'js-cookie'
+import { Auth } from 'aws-amplify'
 
 export default function ConfirmationPage() {
   const [email, setEmail] = React.useState('');
@@ -24,26 +24,31 @@ export default function ConfirmationPage() {
   const resend_code = async (event) => {
     console.log('resend_code')
     // [TODO] Authenication
+    setErrors('')
+    try{
+      await Auth.resentSignUp(email);
+      console.log('code resent successfully');
+      setCodeSent(true)
+    } catch (err) {
+      console.log(err)
+      if (err.message == 'Username cannot be empty'){
+        setErrors('You need to provide email in order to send Resent Activation Code')
+      } else if (err.message == 'Username/client id combination not found.') {
+        setErrors('Email is invalid or cannot be found.')
+      }
+    }
   }
 
   const onsubmit = async (event) => {
     event.preventDefault();
     console.log('ConfirmationPage.onsubmit')
     // [TODO] Authenication
-    if (Cookies.get('user.email') === undefined || Cookies.get('user.email') === '' || Cookies.get('user.email') === null){
-      setErrors("You need to provide an email in order to send Resend Activiation Code")   
-    } else {
-      if (Cookies.get('user.email') === email){
-        if (Cookies.get('user.confirmation_code') === code){
-          Cookies.set('user.logged_in',true)
-          window.location.href = "/"
-        } else {
-          setErrors("Code is not valid")
-        }
-      } else {
-        setErrors("Email is invalid or cannot be found.")   
-      }
-    }
+   try {
+    await Auth.confirmSingUp(email, code);
+     window.location.href = '/'
+   } catch (error) {
+    setErrors(error.message)
+   }
     return false
   }
 
