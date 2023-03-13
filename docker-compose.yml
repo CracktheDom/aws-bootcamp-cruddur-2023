@@ -30,7 +30,7 @@ services:
 #       REACT_APP_AWS_COGNITO_ID: "*"
       REACT_APP_AWS_COGNITO_REGION: "${AWS_DEFAULT_REGION}"
       REACT_APP_AWS_USER_POOLS_ID: "us-east-2_7cm4Q6fHv"
-      REACT_APP_CLIENT_ID: " "
+      REACT_APP_AWS_USER_POOLS_WEB_CLIENT_ID: "687iujhiy97kt0rk5gi7"  # need to update
     build: ./frontend-react-js
     ports:
       - "3000:3000"
