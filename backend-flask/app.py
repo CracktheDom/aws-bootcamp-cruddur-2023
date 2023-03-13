@@ -90,9 +90,6 @@ cors = CORS(
 
 # --- Rollbar ---
 rollbar_access_token = os.getenv('ROLLBAR_ACCESS_TOKEN')
-rollbar.configure(log_level="warning")
-rollbar.configure(extra_data={"user_id": "Fifty_Pence"})
-rollbar.configure(max_payload_size=1024)
 
 @app.before_first_request
 def init_rollbar():
@@ -114,6 +111,17 @@ def init_rollbar():
 @app.route('/rollbar/test')
 def rollbar_test():
     rollbar.report_message("Hello World!", "warning")
+
+    # # extra fields we'd like to send along to rollbar (optional)
+    # extra_data = {'datacenter': 'us1', 'app' : {'version': '0.1'}}
+    
+    # # report full exception info
+    # rollbar.report_exc_info(sys.exc_info(), request, extra_data=extra_data)
+
+    # # and/or, just send a string message with a level
+    # rollbar.report_message("Here's a message", 'info', request, extra_data=extra_data)
+
+    # yield '<p>Caught an exception</p>'
     return "Hello World!"
 
 @app.route("/api/message_groups", methods=['GET'])
