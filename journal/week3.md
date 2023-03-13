@@ -141,7 +141,13 @@ import { Auth } from 'aws-amplify';
 * Click on URL to the frontend, click on **Sign In** button, enter email and password, on **Sign In** button
 * **Incorrect username or password** error message should pop up
 
-![HINT: pic of error message displayed on Sign In page()
+![HINT: pic of error message displayed on Sign In page]()
 
-#### Go to AWS Cognito Console and create a new user
+#### Go to AWS Cognito Console and Create a New User
+* Click on **Create user** button
+* Enter email address and password and check the box for **Mark email address as verified**
+* Click on **Create user** button
+
+#### Go to Cruddur signin page
+* Sign in the same credentials used on the Cognito **Create user** page
 
