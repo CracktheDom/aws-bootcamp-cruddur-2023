@@ -157,8 +157,6 @@ def data_create_message():
 @app.route("/api/activities/home", methods=['GET'])
 @cross_origin()
 def data_home():
-  app.logger.debug('AUTH HEADER')
-  # app.logger.debug(request.headers.get('Authorization'))
   data = HomeActivities.run()  # enter logger=logger as a parameter to enable logging to CloudWatch
   return data, 200
 
