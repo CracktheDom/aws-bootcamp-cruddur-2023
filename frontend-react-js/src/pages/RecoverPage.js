@@ -19,7 +19,7 @@ export default function RecoverPage() {
     setErrors('')
     Auth.forgotPassword(username)
     .then((data) => setFormState('confirm_code'))
-    .catch(err) => setErrors(err.message));    
+    .catch((err) => setErrors(err.message));    
     return false
   }
   
