@@ -1,6 +1,5 @@
 import os
-from flask import Flask
-from flask import request
+from flask import Flask, request, got_request_exception
 from flask_cors import CORS, cross_origin
 
 from services.home_activities import HomeActivities
@@ -36,10 +35,9 @@ from opentelemetry.sdk.trace.export import ConsoleSpanExporter
 # --- Rollbar ---
 import rollbar
 import rollbar.contrib.flask
-from flask import got_request_exception
 
 # ---FlaskAWSCognito JWT service ---
-from lib.cognitoJWTVerification import TokenService
+from lib.cognitoJWTVerification import TokenService, TokenVerifyError
 
 
 # Configuring Logger to use CloudWatch
@@ -152,7 +150,10 @@ def data_messages(handle):
   user_sender_handle = 'andrewbrown'
   user_receiver_handle = request.args.get('user_reciever_handle')
 
-  model = Messages.run(user_sender_handle=user_sender_handle, user_receiver_handle=user_receiver_handle)
+  model = Messages.run(
+    user_sender_handle=user_sender_handle, 
+    user_receiver_handle=user_receiver_handle
+    )
   if model['errors'] is not None:
     return model['errors'], 422
   return model['data'], 200
@@ -165,7 +166,11 @@ def data_create_message():
   user_receiver_handle = request.json['user_receiver_handle']
   message = request.json['message']
 
-  model = CreateMessage.run(message=message,user_sender_handle=user_sender_handle,user_receiver_handle=user_receiver_handle)
+  model = CreateMessage.run(
+    message=message,
+    user_sender_handle=user_sender_handle,
+    user_receiver_handle=user_receiver_handle
+    )
   if model['errors'] is not None:
     return model['errors'], 422
   return model['data'], 200
@@ -175,11 +180,11 @@ def data_create_message():
 @cross_origin()
 def data_home():
   access_token = TokenService.extract_access_token(request.headers)
-  app.logger.debug("What is in requests.headers")
+  app.logger.debug("What is in request.headers")
   app.logger.debug(f"request.headers is of type {type(request.headers)}")
   
   try:
-    cognitoTokenService.token_service.verify(access_token)
+    cognitoTokenService.verify(access_token)
   except TokenVerifyError as e:
     _ = request.data
     abort(make_response(jsonify(message=str(e)), 401))
