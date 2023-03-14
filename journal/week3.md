@@ -1,7 +1,7 @@
 # Week 3 — Decentralized Authentication
 ## Create Cognito User Pool
 #### Use AWS CLI
-```bash
+```sh
 aws cognito-idp create-user-pool --pool-name cruddur_pool \
 --policies PasswordPolicy={MinimumLength=16} \
 --schema Name=first_name,AttributeDataType=String,Required=True \
@@ -143,11 +143,119 @@ import { Auth } from 'aws-amplify';
 
 ![HINT: pic of error message displayed on Sign In page]()
 
-#### Go to AWS Cognito Console and Create a New User
+#### Go to AWS Cognito Console and Manually Create a New User
 * Click on **Create user** button
 * Enter email address and password and check the box for **Mark email address as verified**
 * Click on **Create user** button
 
 #### Go to Cruddur Sign In Page
 * Sign in the with same credentials used on the Cognito **Create user** page
+I received a "user Session is null" error, when I look at the user info for the newly created user, the page displayed the "Force Password Change" under the Email verified section, but the app has not been fully implemented to utilize password changes, so exeucted the following command in a terminal:
 
+```sh
+aws cognito-idp admin-set-user-password \
+--user-pool-id us-east-2_7cm4Q6fHv \
+--username <email_address> \
+--password <new_password> \
+--permanent
+```
+* With the email now verified, go to Cruddur (frontend url), sign in successfully
+
+![HINT pic showing successfully logged into Cruddur after manually creating user]()
+
+#### Implement aws-amplify in SignupPage.js, ConfirmationPage.js and RecoverPage.js
+##### SignupPage.js
+* Enter insert the import statement into `frontend-react-js/src/pages/SignupPage.js` and replace **onsubmit** variable with following code:
+
+```js
+import { Auth } from 'aws-amplify'
+...
+
+  const onsubmit = async (event) => {
+    event.preventDefault();
+    setErrors('');
+    try {
+      const { user } = await Auth.signUp({
+        username: email,
+        password: password,
+        attributes: {
+          name: name,
+          email: email,
+          preferred_username: username,
+        },
+        autoSignIn: { // optional - enables auto sign in after user is confirmed
+          enabled: true,
+        }
+      });
+      console.log('user', user);
+      window.location.href = `/confirm?email=$(email)`
+    } catch (error) {
+      console.log(error);
+      setErrors(error.message)
+    }
+    return false
+  }
+```
+##### ConfirmationPage.js
+* Enter insert the import statement into `frontend-react-js/src/pages/ConfirmationPage.js` and replace **resend_code** and **onsubmit** variables with following code:
+```js
+import { Auth } from 'aws-amplify'
+...
+
+  const resend_code = async (event) => {
+    console.log('resend_code')
+    // [TODO] Authenication
+    setErrors('')
+    try{
+      await Auth.resentSignUp(email);
+      console.log('code resent successfully');
+      setCodeSent(true)
+    } catch (err) {
+      console.log(err)
+      if (err.message == 'Username cannot be empty'){
+        setErrors('You need to provide email in order to send Resent Activation Code')
+      } else if (err.message == 'Username/client id combination not found.') {
+        setErrors('Email is invalid or cannot be found.')
+      }
+    }
+  }
+  
+  const onsubmit = async (event) => {
+    event.preventDefault();
+    console.log('ConfirmationPage.onsubmit')
+    // [TODO] Authenication
+   try {
+    await Auth.confirmSingUp(email, code);
+     window.location.href = '/'
+   } catch (error) {
+    setErrors(error.message)
+   }  
+```
+
+##### RecoverPage.js
+* Enter insert the import statement into `frontend-react-js/src/pages/RecoverPage.js` and replace **onsubmit_send_code** and **onsubmit_confirm_code** variables with following code:
+```js
+  const onsubmit_send_code = async (event) => {
+    event.preventDefault();
+    console.log('onsubmit_send_code')
+    setErrors('')
+    Auth.forgotPassword(username)
+    .then((data) => setFormState('confirm_code'))
+    .catch(err) => setErrors(err.message));    
+    return false
+  }
+
+  const onsubmit_confirm_code = async (event) => {
+    event.preventDefault();
+    console.log('onsubmit_confirm_code')
+    setErrors('')
+    if (password == passwordAgain){
+      Auth.forgotPasswordSubmit(username, code, password)
+      .then((data) => setFormState('success'))
+      .catch((err) => setCognitoErrors(err.message));
+    } else {
+      setCognitoErrors('Passwords do not match')
+    }
+    return false
+  }
+```
