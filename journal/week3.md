@@ -1,12 +1,11 @@
 # Week 3 — Decentralized Authentication
 ## Create Cognito User Pool
-#### Use AWS CLI
+### Use AWS CLI
 ```sh
-aws cognito-idp create-user-pool --pool-name cruddur_pool \
---policies PasswordPolicy={MinimumLength=16} \
---schema Name=first_name,AttributeDataType=String,Required=True \
---schema Name=last_name,AttributeDataType=String,Required=True \
---schema Name=preferred_username,AttributeDataType=String,Required=True \
+aws cognito-idp create-user-pool --pool-name cruddur_poolhall \
+--policies PasswordPolicy={MinimumLength=16,RequireUppercase=True,RequireLowercase=True,RequireNumbers=True} \
+--schema Name=full_name,AttributeDataType=String,Required=True,Mutable=True \
+--schema Name=preferred_username,AttributeDataType=String,Required=True,Mutable=True \
 --deletion-protection ACTIVE \
 --auto-verified-attributes email \
 --username-attributes email \
@@ -14,25 +13,26 @@ aws cognito-idp create-user-pool --pool-name cruddur_pool \
 --user-attribute-update-settings AttributesRequireVerificationBeforeUpdate=email \
 --admin-create-user-config AllowAdminCreateUserOnly=false \
 --username-configuration CaseSensitive=True \
+--email-configuration  \
 --account-recovery-setting "RecoveryMechanisms=[{Priority=1,Name="verified_email"}]"
 ```
 ![HINT: pic of AWS CLI showing JSON response]()
-#### Navigate to AWS Cognito to Create Client App
-* On the **cruddur_pool** User Pool info page, click on the **App integration** tab
+### Navigate to AWS Cognito to Create Client App
+* On the ***cruddur_pool*** User Pool info page, click on the ***App integration*** tab
 
 ![HINT: pic of user pool info page]()
-* Navigate down to **App client list** section
-* Click on **Create app client** button
-* Ensure **Public client** is selected for the **App type**
-* Enter a name in the **App client name** field
-* Finally click on the **Create app client** button
-* On the **cruddur_pool** info page, click the **App integration** tab and navigate down to **App client list** section
-* Copy the **Client ID** to **REACT_APP_AWS_USER_POOLS_WEB_CLIENT_ID** environment variable in the `docker-compose.yml` file
+* Navigate down to ***App client list*** section
+* Click on ***Create app client*** button
+* Ensure ***Public client*** is selected for the ***App type***
+* Enter a name in the ***App client name*** field
+* Finally click on the ***Create app client*** button
+* On the ***cruddur_pool*** info page, click the ***App integration*** tab and navigate down to ***App client list*** section
+* Copy the ***Client ID*** to ***REACT_APP_AWS_USER_POOLS_WEB_CLIENT_ID*** environment variable in the `docker-compose.yml` file
 
 ![HINT pic of user pool web client id]()
-#### Add aws-amplify to frontend
+### Add aws-amplify to frontend
 * Navigate to `frontend-react-js` directory and execute `npm install aws-amplify --save`
-* Verify `aws-amplify` is in the `frontend-react-js/package.json` file
+* Verify ***aws-amplify*** is in the `frontend-react-js/package.json` file
 * Navigate to `frontend-react-js/src/App.js` and append the file with the following code:
 
 ```js
@@ -111,7 +111,7 @@ import { Amplify } from 'aws-amplify';
   }
 ```
 
-* Navigate to `frontend-react-js/src/pages/SigninPage.js` and remove the cookie import statement & append the file with the following code:
+* Navigate to `frontend-react-js/src/pages/SigninPage.js` and remove the ***cookie*** import statement & append the file with the following code:
 
 ```js
 import { Auth } from 'aws-amplify';
@@ -136,20 +136,20 @@ import { Auth } from 'aws-amplify';
     return false
   }
 ```
-#### Run Containers to check if implementation of aws-amplify is working
+### Run Containers to check if implementation of aws-amplify is working
 * In a terminal, execute `docker compose -f "docker-compose.yml" up -d --build`
-* Click on URL to the frontend, click on **Sign In** button, enter email and password, on **Sign In** button
-* **Incorrect username or password** error message should pop up
+* Click on URL to the frontend, click on ***Sign In*** button, enter email and password, on ***Sign In*** button
+* ***Incorrect username or password*** error message should pop up
 
 ![HINT: pic of error message displayed on Sign In page]()
 
-#### Go to AWS Cognito Console and Manually Create a New User
-* Click on **Create user** button
-* Enter email address and password and check the box for **Mark email address as verified**
-* Click on **Create user** button
+### Go to AWS Cognito Console and Manually Create a New User
+* Click on ***Create user*** button
+* Enter email address and password and check the box for ***Mark email address as verified***
+* Click on ***Create user*** button
 
-#### Go to Cruddur Sign In Page
-* Sign in the with same credentials used on the Cognito **Create user** page
+### Go to Cruddur Sign In Page
+* Sign in the with same credentials used on the Cognito ***Create user*** page
 I received a "user Session is null" error, when I look at the user info for the newly created user, the page displayed the "Force Password Change" under the Email verified section, but the app has not been fully implemented to utilize password changes, so exeucted the following command in a terminal:
 
 ```sh
@@ -163,9 +163,9 @@ aws cognito-idp admin-set-user-password \
 
 ![HINT pic showing successfully logged into Cruddur after manually creating user]()
 
-#### Implement aws-amplify in SignupPage.js, ConfirmationPage.js and RecoverPage.js
-##### SignupPage.js
-* Enter insert the import statement into `frontend-react-js/src/pages/SignupPage.js` and replace **onsubmit** variable with following code:
+### Implement aws-amplify in SignupPage.js, ConfirmationPage.js and RecoverPage.js
+#### SignupPage.js
+* Enter insert the import statement into `frontend-react-js/src/pages/SignupPage.js` and replace ***onsubmit*** variable with following code:
 
 ```js
 import { Auth } from 'aws-amplify'
@@ -196,8 +196,8 @@ import { Auth } from 'aws-amplify'
     return false
   }
 ```
-##### ConfirmationPage.js
-* Enter insert the import statement into `frontend-react-js/src/pages/ConfirmationPage.js` and replace **resend_code** and **onsubmit** variables with following code:
+#### ConfirmationPage.js
+* Enter insert the import statement into `frontend-react-js/src/pages/ConfirmationPage.js` and replace ***resend_code*** and ***onsubmit*** variables with following code:
 ```js
 import { Auth } from 'aws-amplify'
 ...
@@ -232,8 +232,8 @@ import { Auth } from 'aws-amplify'
    }  
 ```
 
-##### RecoverPage.js
-* Enter insert the import statement into `frontend-react-js/src/pages/RecoverPage.js` and replace **onsubmit_send_code** and **onsubmit_confirm_code** variables with following code:
+#### RecoverPage.js
+* Enter insert the import statement into `frontend-react-js/src/pages/RecoverPage.js` and replace ***onsubmit_send_code*** and ***onsubmit_confirm_code*** variables with following code:
 ```js
   const onsubmit_send_code = async (event) => {
     event.preventDefault();
@@ -259,3 +259,32 @@ import { Auth } from 'aws-amplify'
     return false
   }
 ```
+### Test Account Creation via the Cruddur site
+* Go to Cognito and delete the maunally created user
+* Go to Cruddur site (frontend) and click the ***Join Now*** button
+* Enter all relevant info and click ***Sign In***
+* Cognito will show the newly user, but show that email has not been verified
+
+![Pic of newly created user but email has not been verified]()
+* On the ***Confirm Your Email*** page, enter email and confirmation code that was mailed to the same email address and click ***Confirm Email*** button
+* Cognito will show confirmed status of user
+
+![Pic of confirmation page]()
+
+### Test Password Recovery
+* Logout of Cruddur site and click on ***Forgot Password*** link
+* Enter email address and a email with a confirmation code will be sent to the provided email address
+* On the ***Recovery your Password***, enter confirmation code and new password twice, click on ***Reset Password***
+
+![HINT: pic of recovery page]()
+* Successful password reset will be displayed
+
+![hint pic of password reset]()
+* Log back in with new credentials to verify that new password works
+
+![HINT: pic of successful lgoin after reset]()
+
+## Implement passing of JSON Web Token (JWT)
+* hmmm
+
+
