@@ -21,9 +21,9 @@ class TokenService:
         self.user_pool_client_id = user_pool_client_id
         self.claims = None
         if not request_client:
-            self.request_client = requests.get
+            self.request_client = request.get
         else:
-            self.request_client = requests.client
+            self.request_client = request.client
         self._load_jwk_keys()
 
 
@@ -46,12 +46,12 @@ class TokenService:
 
 
     def _find_pkey(self, headers):
-        kid = headers['kid']
+        kid = headers["kid"]
         # search for the kid in the downloaded public keys
         key_index = -1
-        for i in range(len(self.jwk_keys)):
-            if kid == self.jwk_keys[i]["kid"]:
-                key_index = i
+        for index, _ in enumerate(self.jwk_keys):
+            if kid == self.jwk_keys[index]["kid"]:
+                key_index = index
                 break
         if key_index == -1:
             raise TokenVerifyError("Public key not found in jwks.json")
@@ -71,7 +71,7 @@ class TokenService:
         decode_signature = base64url_decode(encoded_signature.encode("uft-8"))
 
         # verify the signature
-        if not public_key.verify(message.encode("utf-8")), decode_signature):
+        if not public_key.verify(message.encode("utf-8"), decode_signature):
             raise TokenVerifyError("Signature verification failed")
 
 
@@ -114,7 +114,7 @@ class TokenService:
 
         self.claims = claims
 
-
+    @classmethod
     def extract_access_token(request_headers):
         access_token = None
         auth_header = request_headers.get("Authorization")
