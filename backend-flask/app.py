@@ -38,6 +38,9 @@ import rollbar
 import rollbar.contrib.flask
 from flask import got_request_exception
 
+# ---FlaskAWSCognito JWT service ---
+from lib.cognitoJWTVerification import TokenService
+
 
 # Configuring Logger to use CloudWatch
 # logger = logging.getLogger(__name__)
@@ -88,8 +91,17 @@ cors = CORS(
 #   logger.error(f"{timestamp} {request.remote_addr} {request.method} {request.scheme} {request.full_path} {response.status}")
 #   return response
 
+
+# ---FlaskAWSCognito JWT service ---
+cognitoTokenService = TokenService(
+  user_pool_id=os.getenv("AWS_COGNITO_USER_POOL_ID"), 
+  user_pool_client_id=os.getenv("AWS_COGNITO_USER_POOL_CLIENT_ID"), 
+  region=os.getenv("AWS_DEFAULT_REGION")
+)
+
 # --- Rollbar ---
 rollbar_access_token = os.getenv('ROLLBAR_ACCESS_TOKEN')
+
 
 @app.before_first_request
 def init_rollbar():
@@ -107,6 +119,7 @@ def init_rollbar():
     # send exceptions from `app` to rollbar, using flask's signal system.
     got_request_exception.connect(rollbar.contrib.flask.report_exception, app)
 
+    
 #  --- Rollbar ---
 @app.route('/rollbar/test')
 def rollbar_test():
@@ -124,6 +137,7 @@ def rollbar_test():
     # yield '<p>Caught an exception</p>'
     return "Hello World!"
 
+  
 @app.route("/api/message_groups", methods=['GET'])
 def data_message_groups():
   user_handle  = 'andrewbrown'
@@ -131,6 +145,7 @@ def data_message_groups():
   if model['errors'] is not None:
     return model['errors'], 422
   return model['data'], 200
+
 
 @app.route("/api/messages/@<string:handle>", methods=['GET'])
 def data_messages(handle):
@@ -141,6 +156,7 @@ def data_messages(handle):
   if model['errors'] is not None:
     return model['errors'], 422
   return model['data'], 200
+
 
 @app.route("/api/messages", methods=['POST','OPTIONS'])
 @cross_origin()
@@ -154,9 +170,22 @@ def data_create_message():
     return model['errors'], 422
   return model['data'], 200
 
+
 @app.route("/api/activities/home", methods=['GET'])
 @cross_origin()
 def data_home():
+  access_token = TokenService.extract_access_token(request.headers)
+  app.logger.debug("What is in requests.headers")
+  app.logger.debug(f"request.headers is of type {type(request.headers)}")
+  
+  try:
+    cognitoTokenService.token_service.verify(access_token)
+  except TokenVerifyError as e:
+    _ = request.data
+    abort(make_response(jsonify(message=str(e)), 401))
+
+  app.logger.debug('claims')
+  app.logger.debug(cognitoTokenService.claims)
   data = HomeActivities.run()  # enter logger=logger as a parameter to enable logging to CloudWatch
   return data, 200
 
@@ -183,6 +212,7 @@ def data_search():
     return model['errors'], 422
   return model['data'], 200
 
+
 @app.route("/api/activities", methods=['POST','OPTIONS'])
 @cross_origin()
 def data_activities():
@@ -194,10 +224,12 @@ def data_activities():
     return model['errors'], 422
   return model['data'], 200
 
+
 @app.route("/api/activities/<string:activity_uuid>", methods=['GET'])
 def data_show_activity(activity_uuid):
   data = ShowActivities.run(activity_uuid=activity_uuid)
   return data, 200
+
 
 @app.route("/api/activities/<string:activity_uuid>/reply", methods=['POST','OPTIONS'])
 @cross_origin()
