@@ -10,6 +10,7 @@ Flask-Cors==3.0.10
 googleapis-common-protos==1.58.0
 itsdangerous==2.1.2
 jmespath==1.0.1
+jose==1.0.0
 opentelemetry-api==1.16.0
 opentelemetry-exporter-otlp-proto-http==1.16.0
 opentelemetry-instrumentation==0.37b0
