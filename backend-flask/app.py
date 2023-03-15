@@ -37,7 +37,7 @@ import rollbar
 import rollbar.contrib.flask
 
 # ---FlaskAWSCognito JWT service ---
-from lib.cognitoJWTVerification import TokenService, TokenVerifyError
+from lib.cognito_jwt_verification import CognitoTokenVerification, TokenVerifyError
 
 
 # Configuring Logger to use CloudWatch
@@ -91,7 +91,7 @@ cors = CORS(
 
 
 # ---FlaskAWSCognito JWT service ---
-cognitoTokenService = TokenService(
+cognito_verify_token = CognitoTokenVerification(
   user_pool_id=os.getenv("AWS_COGNITO_USER_POOL_ID"), 
   user_pool_client_id=os.getenv("AWS_COGNITO_USER_POOL_CLIENT_ID"), 
   region=os.getenv("AWS_DEFAULT_REGION")
@@ -179,15 +179,15 @@ def data_create_message():
 @app.route("/api/activities/home", methods=['GET'])
 @cross_origin()
 def data_home():
-  access_token = cognitoTokenService.extract_access_token(request.headers)  
+  access_token = cognito_verify_token.extract_access_token(request.headers)  
   try:
-    cognitoTokenService.verify(access_token)
+    cognito_verify_token.verify(access_token)
   except TokenVerifyError as e:
     _ = request.data
     abort(make_response(jsonify(message=str(e)), 401))
 
   # app.logger.debug('claims')
-  # app.logger.debug(cognitoTokenService.claims)
+  # app.logger.debug(cognito_verify_token.claims)
   data = HomeActivities.run()  # enter logger=logger as a parameter to enable logging to CloudWatch
   return data, 200
 
