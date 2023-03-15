@@ -1,7 +1,7 @@
 import time
 import requests
 from jose import jwt, jwk
-from jose.exception import JOSEError
+from jose.exceptions import JOSEError
 from jose.utils import base64url_decode
 
 
@@ -32,8 +32,8 @@ class TokenService:
         keys_url = f"https://cognito-idp.{self.region}.amazonaws.com/{self.user_pool_id}/.well-known/jwks.json"
         try:
             response = self.request_client(keys_url)
-            self.jwk_keys = response.json()['keys']
-        except request.exceptions.RequestException as e:
+            self.jwk_keys = response.json()["keys"]
+        except requests.exceptions.RequestException as e:
             raise FlaskAWSCognitoError(str(e)) from e
 
 
