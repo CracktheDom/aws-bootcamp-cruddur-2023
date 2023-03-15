@@ -69,7 +69,7 @@ class TokenService:
         message, encoded_signature = str(token).rsplit(".", 1)
 
         # decode the signature
-        decode_signature = base64url_decode(encoded_signature.encode("uft-8"))
+        decode_signature = base64url_decode(encoded_signature.encode("utf-8"))
 
         # verify the signature
         if not public_key.verify(message.encode("utf-8"), decode_signature):
@@ -79,7 +79,7 @@ class TokenService:
     @staticmethod
     def _extract_claims(token):
         try:
-            claims = jwt.get_unverifies_claims(token)
+            claims = jwt.get_unverified_claims(token)
             return claims
         except JOSEError as e:
             raise TokenVerifyError(str(e)) from e
@@ -115,7 +115,7 @@ class TokenService:
 
         self.claims = claims
 
-    @classmethod
+    # @classmethod
     def extract_access_token(request_headers):
         access_token = None
         auth_header = request_headers.get("Authorization")
