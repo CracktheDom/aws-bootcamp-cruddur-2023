@@ -14,8 +14,8 @@ services:
       AWS_XRAY_URL: "*4567-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}"
       AWS_XRAY_DAEMON_ADDRESS: "xray-daemon:2000"
       ROLLBAR_ACCESS_TOKEN: "${ROLLBAR_ACCESS_TOKEN}"
-      AWS_USER_POOLS_ID: "us-east-2_7cm4Q6fHv"
-      AWS_USER_POOLS_WEB_CLIENT_ID: "50tfbjvr17fs6u7ontrgiai5sa"      
+      AWS_COGNITO_USER_POOL_ID: "us-east-2_7cm4Q6fHv"
+      AWS_COGNITO_USER_POOL_CLIENT_ID: "50tfbjvr17fs6u7ontrgiai5sa"      
     build: ./backend-flask
     ports:
       - "4567:4567"
