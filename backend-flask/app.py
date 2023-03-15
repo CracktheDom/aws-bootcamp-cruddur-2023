@@ -179,19 +179,15 @@ def data_create_message():
 @app.route("/api/activities/home", methods=['GET'])
 @cross_origin()
 def data_home():
-  access_token = TokenService.extract_access_token(request.headers)
-  app.logger.debug("What is in request.headers")
-  app.logger.debug(f"request.headers is of type {type(request.headers)}")
-  app.logger.debug(request.headers)
-  
+  access_token = cognitoTokenService.extract_access_token(request.headers)  
   try:
     cognitoTokenService.verify(access_token)
   except TokenVerifyError as e:
     _ = request.data
     abort(make_response(jsonify(message=str(e)), 401))
 
-  app.logger.debug('claims')
-  app.logger.debug(cognitoTokenService.claims)
+  # app.logger.debug('claims')
+  # app.logger.debug(cognitoTokenService.claims)
   data = HomeActivities.run()  # enter logger=logger as a parameter to enable logging to CloudWatch
   return data, 200
 
