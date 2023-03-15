@@ -182,6 +182,7 @@ def data_home():
   access_token = TokenService.extract_access_token(request.headers)
   app.logger.debug("What is in request.headers")
   app.logger.debug(f"request.headers is of type {type(request.headers)}")
+  app.logger.debug(request.headers)
   
   try:
     cognitoTokenService.verify(access_token)
