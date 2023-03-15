@@ -1,14 +1,15 @@
 import time
+import requests
 from jose import jwt, jwk
 from jose.exception import JOSEError
 from jose.utils import base64url_decode
 
 
-class FlaskAWSCognitoError:
+class FlaskAWSCognitoError(Exception):
     pass
 
 
-class TokenVerifyError:
+class TokenVerifyError(Exception):
     pass
 
 
@@ -21,7 +22,7 @@ class TokenService:
         self.user_pool_client_id = user_pool_client_id
         self.claims = None
         if not request_client:
-            self.request_client = request.get
+            self.request_client = requests.get
         else:
             self.request_client = request.client
         self._load_jwk_keys()
