@@ -1,0 +1,23 @@
+#!/usr/bin/bash
+
+CYAN='[1;36m'
+NO_COLOR='[0m'
+LABEL=./backend-flask/bin/db-sessions
+printf "${CYAN}== ${LABEL}${NO_COLOR}"
+
+if [ "$1" = "prod" ]; then
+  echo "Using the Prod environment"
+  URL=$PROD_CONNECTION_URL
+else
+  echo "This is the Development environment"
+  URL=$CONNECTION_URL
+fi
+
+NO_DB_CON_URL=$(sed 's/\/crudder//g' <<< $URL)
+psql $NO_DB_CON_URL -c "select pid as process_id, \
+    username user,
+    datname db, \
+    client_addr, \
+    application_name app, \
+    state \
+from pg_stat_activity;"

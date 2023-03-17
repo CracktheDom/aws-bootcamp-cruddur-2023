@@ -1,0 +1,7 @@
+#!/usr/bin/bash
+
+CYAN='[1;36m'
+NO_COLOR='[0m'
+LABEL=./backend-flask/bin/db-setup
+printf "${CYAN}== ${LABEL}${NO_COLOR}"
+
