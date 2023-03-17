@@ -11,4 +11,3 @@ $bin_path/db-drop
 $bin_path/db-create
 $bin_path/db-schema-load
 $bin_path/db-seed
-$bin_path/db-
