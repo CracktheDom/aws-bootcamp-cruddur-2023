@@ -121,4 +121,5 @@ class CognitoTokenVerification:
         auth_header = request_headers["Authorization"]
         if auth_header and " " in auth_header:
             _, access_token = auth_header.split(" ")
-        return access_token
+            return access_token
+        print("No Authorization header found")
