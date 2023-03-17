@@ -3,5 +3,12 @@
 CYAN='[1;36m'
 NO_COLOR='[0m'
 LABEL=./backend-flask/bin/db-setup
-printf "${CYAN}== ${LABEL}${NO_COLOR}"
+printf "${CYAN}== ${LABEL}${NO_COLOR} "
 
+bin_path=$(realpath "./backend-flask/bin")
+
+$bin_path/db-drop
+$bin_path/db-create
+$bin_path/db-schema-load
+$bin_path/db-seed
+$bin_path/db-

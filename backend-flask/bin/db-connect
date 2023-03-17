@@ -3,5 +3,7 @@
 CYAN='[1;36m'
 NO_COLOR='[0m'
 LABEL=./backend-flask/bin/db-connect
-printf "${CYAN}== ${LABEL}${NO_COLOR}"
+printf "${CYAN}== ${LABEL}${NO_COLOR} "
 
+CONNECTION_URL=$(sed 's/\/crudder//g' <<< $CONNECTION_URL)
+psql $CONNECTION_URL
