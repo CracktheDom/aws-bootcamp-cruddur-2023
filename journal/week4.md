@@ -40,12 +40,11 @@ backend-flask/bin/db-setup
 * Add UUID extension to *backend-flask/db/schema.sql*
 ```sql
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-psql cruddur < backend-flask/db/schema.sql -h localhost -U postgres
 ```
-* Create envronment variables
+* Create environment variables
 ```sh
 export CONNECTION_URL="postgresql://postgres:password@localhost:5432/cruddur"
-PROD_CONNECTION_URL="postgresql://cruddur_root:SomeType0fPas5w0rD@localhost:5432/cruddur"
+export PROD_CONNECTION_URL="postgresql://cruddur_root:SomeType0fPas5w0rD@localhost:5432/cruddur"
 ```
 * Add shebang and color coding to files in *backend-flask/bin* directory
 ```sh
@@ -80,7 +79,7 @@ fi
 
 psql $CON_URL cruddur < $schema_path
 ```
-* Change permissions of files/scripts, make them executable for user
+* Change the permissions of scripts, make them executable for user
 ```sh
 chmod -Rv u+x ./backend-flask/bin/*
 ```
@@ -111,8 +110,12 @@ CREATE TABLE public.activities (
   created_at TIMESTAMP default current_timestamp NOT NULL
 );
 ```
-** in postgres schema refers to different namespaces
+** in postgres schema refers to different namespaces **
 
+* Execute the following code to test if it is successful
+```sh
+psql cruddur < backend-flask/db/schema.sql -h localhost -U postgres
+```
 ## Seed (provide mock) data
 * in *backend-flask/bin/db-seed* append
 
