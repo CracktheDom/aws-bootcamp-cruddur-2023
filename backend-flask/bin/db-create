@@ -5,5 +5,5 @@ NO_COLOR='[0m'
 LABEL=./backend-flask/bin/db-create
 printf "${CYAN}== ${LABEL}${NO_COLOR}"
 
-NO_DB_CONNECTION_URL=$(sed 's/\/crudder//g' <<< $CONNECTION_URL)
+NO_DB_CONNECTION_URL=$(sed 's/\/cruddur//g' <<< $CONNECTION_URL)
 psql $NO_DB_CONNECTION_URL -c "create database cruddur;"
