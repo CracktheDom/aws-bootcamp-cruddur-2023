@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, got_request_exception
+from flask import Flask, request, got_request_exception, abort, jsonify, make_response
 from flask_cors import CORS, cross_origin
 
 from services.home_activities import HomeActivities
@@ -179,15 +179,20 @@ def data_create_message():
 @app.route("/api/activities/home", methods=['GET'])
 @cross_origin()
 def data_home():
-  access_token = cognito_verify_token.extract_access_token(request.headers)  
+  access_token = cognito_verify_token.extract_access_token(request.headers)
+  app.logger.debug("What is in request.headers")
+  app.logger.debug(request.headers)
+  app.logger.debug('claims')
+  app.logger.debug(cognito_verify_token.claims)
+  app.logger.debug('username claims')
+  app.logger.debug(cognito_verify_token.claims['username'])
   try:
     cognito_verify_token.verify(access_token)
   except TokenVerifyError as e:
     _ = request.data
     abort(make_response(jsonify(message=str(e)), 401))
 
-  # app.logger.debug('claims')
-  # app.logger.debug(cognito_verify_token.claims)
+
   data = HomeActivities.run()  # enter logger=logger as a parameter to enable logging to CloudWatch
   return data, 200
 
