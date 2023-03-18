@@ -24,7 +24,7 @@ class CognitoTokenVerification:
         if not request_client:
             self.request_client = requests.get
         else:
-            self.request_client = request.client
+            self.request_client = request_client
         self._load_jwk_keys()
 
 
@@ -118,7 +118,7 @@ class CognitoTokenVerification:
     # @classmethod
     def extract_access_token(self, request_headers):
         access_token = None
-        auth_header = request_headers["Authorization"]
+        auth_header = request_headers.get("Authorization")
         if auth_header and " " in auth_header:
             _, access_token = auth_header.split(" ")
             return access_token
