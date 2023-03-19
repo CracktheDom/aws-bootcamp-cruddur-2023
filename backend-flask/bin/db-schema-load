@@ -2,10 +2,10 @@
 
 CYAN='[1;36m'
 NO_COLOR='[0m'
-LABEL=./backend-flask/bin/db-schema-load
+LABEL="db-schema-load"
 printf "${CYAN}== ${LABEL}${NO_COLOR}"
 
-schema_path=$(realpath ./backend-flask/db/schema.sql)
+schema_path=$(realpath "$THEIA_WORKSPACE_ROOT/backend-flask/db/schema.sql")
 
 if [ "$1" = "prod" ]; then
   echo "Using the Prod environment"
