@@ -16,7 +16,12 @@ services:
       ROLLBAR_ACCESS_TOKEN: "${ROLLBAR_ACCESS_TOKEN}"
       AWS_COGNITO_USER_POOL_ID: "us-east-2_7cm4Q6fHv"
       AWS_COGNITO_USER_POOL_CLIENT_ID: "50tfbjvr17fs6u7ontrgiai5sa"
-      CONNECTION_URL: "postgresql://postgres:password@db:5432/cruddur"    
+      DB_SG_ID: "${DB_SG_ID}"
+      DG_SG_RULE_ID: "${DG_SG_RULE_ID}"
+      RDS_DB_PASSWORD: "${RDS_DB_PASSWORD}"
+      RDS_DB_USERNAME: "${RDS_DB_USERNAME}"
+      CONNECTION_URL: "postgresql://postgres:password@db:5432/cruddur"
+      PROD_CONNECTION_URL: "postgresl://{$RDS_DB_USERNAME}:{$RDS_DB_PASSWORD}@{CRUDDUR_DB_ENDPOINT}:5432/cruddur"
     build: ./backend-flask
     ports:
       - "4567:4567"
