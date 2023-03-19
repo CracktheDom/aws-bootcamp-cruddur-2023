@@ -176,9 +176,136 @@ fi
 
 NO_DB_CON_URL=$(sed 's/\/cruddur//g' <<< $URL)
 psql $NO_DB_CON_URL -c "select pid as process_id, \
-    username user,
-    datname db, \
+    usename as user,
+    datname as db, \
     client_addr, \
-    application_name app, \
+    application_name as app, \
     state \
 from pg_stat_activity;"
+
+* Create DB setup script
+- in *backend-flask/bin/db-setup* append:
+```sh
+CYAN='\033[1;36m'
+NO_COLOR='\033[0m'
+LABEL='db-sessions'
+printf "${CYAN}== ${LABEL}${NO_COLOR}\n"
+
+bin_path=$(realpath "$THEIA_WORKSPACE_ROOT/backend-flask/bin")
+
+$bin_path/db-drop
+$bin_path/db-create
+$bin_path/db-schema-load
+$bin_path/db-seed
+```
+## Connect to RDS Instance
+### Need driver to interact with Postgres DB
+* add psycopg[binary] & psycopg[pool] to *requirements.txt*
+* execute `python3 -m pip -r requirements.txt` in the *backend-flask* directory
+
+**connection pooling within Postgres**
+
+```py
+touch backend-flask/lib/db.py
+```
+
+* in *backend-flask/lib/db.py*
+```py
+import os
+from psycopg_pool import ConnectionPool
+
+
+def query_wrap_object(template):
+    """ Postgres docs """
+    sql = f"""
+    (SELECT COALESCE(row_to_json(object_row), '{{}}'::json) FROM (
+    {template}
+    ) object_row);
+    """
+    return sql
+
+def query_wrap_array(template):
+    sql = f"""
+    (SELECT COALESCE(array_to_json(array_agg(row_to_json(array_row))), '[]'::json) FROM (
+    {template}
+    ) array_row);
+    """
+    return sql
+
+connection_url = os.getenv("CONNECTION_URL")
+pool = ConnectionPool(connection_url)
+```
+
+* Delete *results* variable in *backend-flask/services/home_activities.py* and replace with following:
+```py
+from lib.db import pool, query_wrap_array
+
+...
+class HomeActivities:
+  def run(cognito_user_id=None):
+    ...
+    sql = query_wrap_array("""
+                           SELECT
+                             activities.uuid,
+                             users.display_name,
+                             users.handle,
+                             activities.message,
+                             activities.replies_count,
+                             activities.reposts_count,
+                             activities.likes_count,
+                             activities.reply_to_activity_uuid,
+                             activities.expires_at,
+                             activities.created_at
+                           FROM public.activities
+                           LEFT JOIN public.users ON users.uuid = activities.user_uuid
+                           ORDER BY activities.created_at DESC
+                           """)
+
+    with pool.connection() as conn:
+      with conn.cursor() as cur:
+         cur.execute(sql)  # returns a tuple
+         json = cur.fetchone()
+    return json[0]
+```
+* Modify database instance security group to allow ingress from GITPOD environment
+* Create new file and make it executable for user
+
+
+```sh
+touch backend-flask/bin/rds-update-sg-rule
+chmod u+x backend-flask/bin/rds-update-sg-rule
+export RDS_DB_USERNAME="cruddur_root"
+export RDS_DB_PASSWORD="SomeType0fPas5w0rD"
+
+export DB_SG_ID=`aws rds describe-db-instances --db-instance-identifier cruddur-db-instance --query DBInstances[0].VpcSecurityGroups[0].VpcSecurityGroupId`
+
+export DB_SG_RULE_ID=`aws ec2 describe-security-group-rules --filters Name=group-id,Values=[$DB_SG_ID] --query 'SecurityGroupRules[].SecurityGroupRuleId | [1]'`
+
+export GITPOD_IP=$(curl ifconfig.me)
+
+aws rds describe-db-instances --db-instance-identifier cruddur-db-instance --query 'DBInstances[].Endpoint[].Address[] | [0]'
+
+* Create environment variable to connect with RDS cruddur DB
+export PROD_CONNECTION_URL="postgresql://${RDS_DB_USERNAME}:${RDS_DB_PASSWORD}@${CRUDDUR_DB_ENDPOINT}:5432/cruddur"
+```
+* Modify DB instance security group to allow traffic from GITPOD environment
+* in *backend-flask/bin/rds-update-sg-rule*
+```sh
+CYAN='\033[1;36m'
+NO_COLOR='\033[0m'
+LABEL='rds-sg-rule'
+printf "${CYAN}== ${LABEL}${NO_COLOR}\n"
+
+aws ec2 modify-security-group-rules --group-id $DB_SG_ID \
+--security-group-rules "SecurityGroupRuleId=$DB_SG_RULE_ID,SecurityGroupRule={Description=GITPOD,IpProtocol=tcp,FromPort=5432,ToPort=5432,CidrIpv4=$GITPOD_IP/32}"
+
+```
+in *.gitpod.yml* file
+```yml
+tasks:
+  - name: postgres
+    command: |
+      export GITPOD_IP=$(curl ifconfig.me)
+      $THEIA_WORKSPACE_ROOT/backend-flask/bin/rds-update-sg-rule
+```
+
