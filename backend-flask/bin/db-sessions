@@ -15,9 +15,9 @@ fi
 
 NO_DB_CON_URL=$(sed 's/\/cruddur//g' <<< $URL)
 psql $NO_DB_CON_URL -c "select pid as process_id, \
-    username user,
-    datname db, \
+    usename as user,
+    datname as db, \
     client_addr, \
-    application_name app, \
+    application_name as app, \
     state \
 from pg_stat_activity;"
