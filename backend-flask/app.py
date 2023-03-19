@@ -182,12 +182,13 @@ def data_home():
   access_token = cognito_verify_token.extract_access_token(request.headers)
   app.logger.debug("What is in request.headers")
   app.logger.debug(request.headers)
-  app.logger.debug('claims')
-  app.logger.debug(cognito_verify_token.claims)
-  app.logger.debug('username claims')
-  app.logger.debug(cognito_verify_token.claims['username'])
+
   try:
     cognito_verify_token.verify(access_token)
+    app.logger.debug('claims')
+    app.logger.debug(cognito_verify_token.claims)
+    app.logger.debug('username claims')
+    app.logger.debug(cognito_verify_token.claims['username'])
   except TokenVerifyError as e:
     _ = request.data
     abort(make_response(jsonify(message=str(e)), 401))
