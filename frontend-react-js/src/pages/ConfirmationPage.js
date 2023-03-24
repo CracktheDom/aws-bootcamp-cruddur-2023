@@ -44,7 +44,7 @@ export default function ConfirmationPage() {
     console.log('ConfirmationPage.onsubmit')
     // [TODO] Authenication
    try {
-    await Auth.confirmSingUp(email, code);
+    await Auth.confirmSignUp(email, code);
      window.location.href = '/'
    } catch (error) {
     setErrors(error.message)
