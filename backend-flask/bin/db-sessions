@@ -3,7 +3,7 @@
 CYAN='[1;36m'
 NO_COLOR='[0m'
 LABEL="db-sessions"
-printf "${CYAN}== ${LABEL}${NO_COLOR}"
+printf "${CYAN}== ${LABEL}${NO_COLOR}\n"
 
 if [ "$1" = "prod" ]; then
   echo "Using the Prod environment"

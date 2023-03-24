@@ -3,7 +3,7 @@
 CYAN='[1;36m'
 NO_COLOR='[0m'
 LABEL="db-seed"
-printf "${CYAN}== ${LABEL}${NO_COLOR}"
+printf "${CYAN}== ${LABEL}${NO_COLOR}\n"
 
 seed_path=$(realpath "$THEIA_WORKSPACE_ROOT/backend-flask/db/seed.sql")
 
