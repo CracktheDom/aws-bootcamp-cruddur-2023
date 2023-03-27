@@ -1,51 +1,80 @@
 import uuid
 from datetime import datetime, timedelta, timezone
+import psycopg2
+from lib import db
+
+
 class CreateActivity:
-  def run(message, user_handle, ttl):
-    model = {
-      'errors': None,
-      'data': None
-    }
+    def run(message, user_handle, ttl):
+        model = {
+          'errors': None,
+          'data': None
+        }
 
-    now = datetime.now(timezone.utc).astimezone()
+        now = datetime.now(timezone.utc).astimezone()
 
-    if (ttl == '30-days'):
-      ttl_offset = timedelta(days=30) 
-    elif (ttl == '7-days'):
-      ttl_offset = timedelta(days=7) 
-    elif (ttl == '3-days'):
-      ttl_offset = timedelta(days=3) 
-    elif (ttl == '1-day'):
-      ttl_offset = timedelta(days=1) 
-    elif (ttl == '12-hours'):
-      ttl_offset = timedelta(hours=12) 
-    elif (ttl == '3-hours'):
-      ttl_offset = timedelta(hours=3) 
-    elif (ttl == '1-hour'):
-      ttl_offset = timedelta(hours=1) 
-    else:
-      model['errors'] = ['ttl_blank']
+        ttl_dict = {
+          '30-days': timedelta(days=30),
+          '7-days': timedelta(days=7),
+          '3-days': timedelta(days=3),
+          '1-day': timedelta(days=1),
+          '12-hours': timedelta(hours=12),
+          '3-hours': timedelta(hours=3),
+          '1-hour': timedelta(hours=1)
+        }
 
-    if user_handle == None or len(user_handle) < 1:
-      model['errors'] = ['user_handle_blank']
+        if ttl in ttl_dict:
+            ttl_offset = ttl_dict[ttl]
+        else:
+            model['errors'] = ['ttl_blank']
 
-    if message == None or len(message) < 1:
-      model['errors'] = ['message_blank'] 
-    elif len(message) > 280:
-      model['errors'] = ['message_exceed_max_chars'] 
 
-    if model['errors']:
-      model['data'] = {
-        'handle':  user_handle,
-        'message': message
-      }   
-    else:
-      model['data'] = {
-        'uuid': uuid.uuid4(),
-        'display_name': 'Andrew Brown',
-        'handle':  user_handle,
-        'message': message,
-        'created_at': now.isoformat(),
-        'expires_at': (now + ttl_offset).isoformat()
-      }
-    return model
+        if user_handle is None or len(user_handle) < 1:
+            model['errors'] = ['user_handle_blank']
+
+        if message is None or len(message) < 1:
+            model['errors'] = ['message_blank'] 
+        elif len(message) > 280:
+            model['errors'] = ['message_exceed_max_chars'] 
+
+        if model['errors']:
+            model['data'] = {
+              'handle':  user_handle,
+              'message': message
+            }   
+        else:
+            model['data'] = {
+              'uuid': uuid.uuid4(),
+              'display_name': 'Andrew Brown',
+              'handle':  user_handle,
+              'message': message,
+              'created_at': now.isoformat(),
+              'expires_at': (now + ttl_offset).isoformat()
+            }
+        return model
+
+    def create_activity(handle, message, expires_at):
+        sql = f"""
+          INSERT INTO public.activities (user_uuid, message, expires_at)
+          VALUES ((select uuid from public.users where users.handle = '{handle}'), '{message}', '{expires_at}') RETURNING uuid;
+          """
+        uuid = db.dbm.query_commit_with_returning_id(  # this redefines the import of uuid
+          sql, 
+          handle=handle, 
+          message=message, 
+          expires_at=expires_at
+          )
+
+        try:
+            with pool.connection() as conn:
+                with conn.cursor() as cur:
+                    print(f"cursor object: {cur}")
+                    cur.execute(sql)
+                    conn.commit()
+        except OperationalError as error:
+            db.dbm.print_psycopg2_exception(error)
+            conn.close()
+        except Exception as error:
+            db.dbm.print_psycopg2_exception(error)
+
+            # conn.rollback()

@@ -1,7 +1,7 @@
 import logging
 from datetime import datetime, timedelta, timezone
 from opentelemetry import trace  # Honeycomb
-from lib.db import pool, query_wrap_array  # Postgres
+from lib import db  # Postgres
 
 
 tracer = trace.get_tracer("home.activities")
@@ -18,26 +18,19 @@ class HomeActivities:
         #     span.set_attribute("app.result_length", len(results))
         #     return results
 
-        sql = query_wrap_array("""
-                           SELECT
-                             activities.uuid,
-                             users.display_name,
-                             users.handle,
-                             activities.message,
-                             activities.replies_count,
-                             activities.reposts_count,
-                             activities.likes_count,
-                             activities.reply_to_activity_uuid,
-                             activities.expires_at,
-                             activities.created_at
-                           FROM public.activities
-                           LEFT JOIN public.users ON users.uuid = activities.user_uuid
-                           ORDER BY activities.created_at DESC
-                           """)
-
-        with pool.connection() as conn:
-            with conn.cursor() as cur:
-                cur.execute(sql)  # returns a tuple
-                json = cur.fetchone()
-        return json[0]
-        
+        return db.dbm.query_array_json("""
+                            SELECT
+                              activities.uuid,
+                              users.display_name,
+                              users.handle,
+                              activities.message,
+                              activities.replies_count,
+                              activities.reposts_count,
+                              activities.likes_count,
+                              activities.reply_to_activity_uuid,
+                              activities.expires_at,
+                              activities.created_at
+                            FROM public.activities
+                            LEFT JOIN public.users ON users.uuid = activities.user_uuid
+                            ORDER BY activities.created_at DESC
+                            """)
