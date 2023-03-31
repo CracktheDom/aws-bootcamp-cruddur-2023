@@ -25,7 +25,7 @@ aws rds create-db-instance \
 
 * stop DB instance
 
-![HINT pic of DB instance stopped temporarily]()
+![HINT pic of DB instance stopped temporarily](https://user-images.githubusercontent.com/85846263/229120991-83a00a75-4c76-4690-89be-c547f582bc99.png)
 
 ## Create scripts and other files to create database, tables, schema
 ```sh
@@ -200,7 +200,7 @@ $bin_path/db-seed
 ```
 ## Connect to RDS Instance
 ### Need driver to interact with Postgres DB
-* add psycopg[binary] & psycopg[pool] to *requirements.txt*
+* add psycopg[binary] & psycopg[pool] to *backend-flask/requirements.txt*
 * execute `python3 -m pip -r requirements.txt` in the *backend-flask* directory
 
 **connection pooling within Postgres**
