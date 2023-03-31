@@ -16,11 +16,12 @@ aws cognito-idp create-user-pool --pool-name cruddur_poolhall \
 --email-configuration  \
 --account-recovery-setting "RecoveryMechanisms=[{Priority=1,Name="verified_email"}]"
 ```
-![HINT: pic of AWS CLI showing JSON response]()
+![HINT: pic of AWS CLI showing JSON response](https://user-images.githubusercontent.com/85846263/229114307-c3ae46bd-8c84-468e-b9b4-ca719c610eb1.png)
+
 ### Navigate to AWS Cognito to Create Client App
 * On the ***cruddur_pool*** User Pool info page, click on the ***App integration*** tab
 
-![HINT: pic of user pool info page]()
+![HINT: pic of user pool info page](https://user-images.githubusercontent.com/85846263/229114518-eed57288-ec62-46cb-8860-067ef9a28990.png)
 * Navigate down to ***App client list*** section
 * Click on ***Create app client*** button
 * Ensure ***Public client*** is selected for the ***App type***
@@ -29,7 +30,7 @@ aws cognito-idp create-user-pool --pool-name cruddur_poolhall \
 * On the ***cruddur_pool*** info page, click the ***App integration*** tab and navigate down to ***App client list*** section
 * Copy the ***Client ID*** to ***REACT_APP_AWS_USER_POOLS_WEB_CLIENT_ID*** environment variable in the `docker-compose.yml` file
 
-![HINT pic of user pool web client id]()
+![HINT pic of user pool web client id](https://user-images.githubusercontent.com/85846263/229114730-56811879-f398-449f-8080-c878894bf830.png)
 ### Add aws-amplify to frontend
 * Navigate to `frontend-react-js` directory and execute `npm install aws-amplify --save`
 * Verify ***aws-amplify*** is in the `frontend-react-js/package.json` file
@@ -141,7 +142,7 @@ import { Auth } from 'aws-amplify';
 * Click on URL to the frontend, click on ***Sign In*** button, enter email and password, on ***Sign In*** button
 * ***Incorrect username or password*** error message should pop up
 
-![HINT: pic of error message displayed on Sign In page]()
+![HINT: pic of error message displayed on Sign In page](https://user-images.githubusercontent.com/85846263/229115603-78f64ec9-018f-4245-9cd1-05744e378916.png)
 
 ### Go to AWS Cognito Console and Manually Create a New User
 * Click on ***Create user*** button
@@ -150,7 +151,7 @@ import { Auth } from 'aws-amplify';
 
 ### Go to Cruddur Sign In Page
 * Sign in the with same credentials used on the Cognito ***Create user*** page
-I received a "user Session is null" error, when I look at the user info for the newly created user, the page displayed the "Force Password Change" under the Email verified section, but the app has not been fully implemented to utilize password changes, so exeucted the following command in a terminal:
+I received a "user Session is null" error, when I look at the user info for the newly created user, the page displayed the "Force Password Change" under the Email verified section, but the app has not been fully implemented to utilize password changes, so I executed the following command in a terminal:
 
 ```sh
 aws cognito-idp admin-set-user-password \
@@ -161,7 +162,7 @@ aws cognito-idp admin-set-user-password \
 ```
 * With the email now verified, go to Cruddur (frontend url), sign in successfully
 
-![HINT pic showing successfully logged into Cruddur after manually creating user]()
+![HINT pic showing successfully logged into Cruddur after manually creating user](https://user-images.githubusercontent.com/85846263/229115787-373b72e2-0c9e-4a37-9353-cd4ba3555935.png)
 
 ### Implement aws-amplify in SignupPage.js, ConfirmationPage.js and RecoverPage.js
 #### SignupPage.js
@@ -260,29 +261,30 @@ import { Auth } from 'aws-amplify'
   }
 ```
 ### Test Account Creation via the Cruddur site
-* Go to Cognito and delete the maunally created user
+* Go to Cognito and delete the manually created user
 * Go to Cruddur site (frontend) and click the ***Join Now*** button
 * Enter all relevant info and click ***Sign In***
 * Cognito will show the newly user, but show that email has not been verified
 
-![Pic of newly created user but email has not been verified]()
+![Pic of newly created user but email has not been verified](https://user-images.githubusercontent.com/85846263/229116279-63ddd465-4ed8-4fdd-8cac-b392cfd61399.png)
 * On the ***Confirm Your Email*** page, enter email and confirmation code that was mailed to the same email address and click ***Confirm Email*** button
 * Cognito will show confirmed status of user
 
-![Pic of confirmation page]()
+![Pic of confirmation page](https://user-images.githubusercontent.com/85846263/229116451-2c683b0d-2544-43cc-9810-50a14380ba8d.png)
 
 ### Test Password Recovery
 * Logout of Cruddur site and click on ***Forgot Password*** link
 * Enter email address and a email with a confirmation code will be sent to the provided email address
 * On the ***Recovery your Password***, enter confirmation code and new password twice, click on ***Reset Password***
 
-![HINT: pic of recovery page]()
+![HINT: pic of recovery page](https://user-images.githubusercontent.com/85846263/229116563-d27e81c3-6ea8-4968-823a-6b997fc7bd99.png)
+
 * Successful password reset will be displayed
 
-![hint pic of password reset]()
+![hint pic of password reset](https://user-images.githubusercontent.com/85846263/229116724-79a7b8f2-1dde-4a49-8535-5d867def07bf.png)
 * Log back in with new credentials to verify that new password works
 
-![HINT: pic of successful lgoin after reset]()
+![HINT: pic of successful lgoin after reset](https://user-images.githubusercontent.com/85846263/229116821-2169ba4f-c382-456e-b14b-3441ab21340b.png)
 
 ## Implement handling of JSON Web Token (JWT) in the backend
 * Add *python-jose* and *Flask-AWSCognito* to `backend-flask/requirements.txt`
