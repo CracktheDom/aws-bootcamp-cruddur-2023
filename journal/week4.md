@@ -284,8 +284,9 @@ export DB_SG_RULE_ID=`aws ec2 describe-security-group-rules --filters Name=group
 export GITPOD_IP=$(curl ifconfig.me)
 
 aws rds describe-db-instances --db-instance-identifier cruddur-db-instance --query 'DBInstances[].Endpoint[].Address[] | [0]'
-
+```
 * Create environment variable to connect with RDS cruddur DB
+```sh
 export PROD_CONNECTION_URL="postgresql://${RDS_DB_USERNAME}:${RDS_DB_PASSWORD}@${CRUDDUR_DB_ENDPOINT}:5432/cruddur"
 ```
 * Modify DB instance security group to allow traffic from GITPOD environment
