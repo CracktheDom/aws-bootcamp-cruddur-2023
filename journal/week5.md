@@ -1,5 +1,5 @@
 # Week 5 — DynamoDB and Serverless Caching
-* create Bash script to load schema to DynamoDB locally
+## create Python script to load schema to DynamoDB locally
 
 ```sh
 mkdir backend-flask/bin/DDB
@@ -63,7 +63,7 @@ response = dynamodb.create_table(
 
 print(response)
 ```
-* create Bash script to list DDB table to confirm creation of it
+## create Bash script to list DDB table to confirm table creation
 
 ```sh
 touch backend-flask/bin/DDB/list-tables
@@ -88,7 +88,7 @@ aws dynamodb list-tables $ENDPOINT_URL \
 chmod u+x backend-flask/bin/DDB/list-tables
 ```
 
-* create Bash script to delete DDB table
+## create Bash script to delete DDB table
 
 ```sh
 touch backend-flask/bin/DDB/delete-table
@@ -121,7 +121,7 @@ chmod u+x backend-flask/bin/DDB/delete-table
 ```sh
 backend-flask/bin/DDB/delete-table cruddur-messages
 ```
-* create Bash script to seed DDB table with mock data
+## create Python script to seed DDB table with mock data
 
 ```sh
 touch backend-flask/bin/DDB/seed
