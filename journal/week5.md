@@ -63,7 +63,7 @@ response = dynamodb.create_table(
 
 print(response)
 ```
-## create Bash script to list DDB table to confirm table creation
+## create Bash script to list DynamoDB table to confirm table creation
 * create file by executing the following Bash command
 ```sh
 touch backend-flask/bin/DDB/list-tables
@@ -88,7 +88,7 @@ aws dynamodb list-tables $ENDPOINT_URL \
 chmod u+x backend-flask/bin/DDB/list-tables
 ```
 
-## create Bash script to delete DDB table
+## create Bash script to delete DynamoDB table
 * create file by executing the following Bash command
 ```sh
 touch backend-flask/bin/DDB/delete-table
@@ -121,7 +121,7 @@ chmod u+x backend-flask/bin/DDB/delete-table
 ```sh
 backend-flask/bin/DDB/delete-table cruddur-messages
 ```
-## create Python script to seed DDB table with mock data
+## create Python script to seed DynamoDB table with mock data
 * create file by executing the following Bash command
 ```sh
 touch backend-flask/bin/DDB/seed
