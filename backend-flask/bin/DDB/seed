@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
-import boto3
 import sys
+import os
 from datetime import datetime, timedelta, timezone
 import uuid
-import os
+import boto3
 
 
 def create_message(client=dynamodb,
@@ -182,7 +182,7 @@ Person 1: And Zathras was just one example of that. He was a small but important
 Person 2: Definitely. I think his character is a great example of the show's ability to balance humor and heart, and to create memorable and beloved characters that fans will cherish for years to come.
 """
 
-message_group_uuid = '78211121-0f4d-4c2d-9186-a1162d4ac74e'  # str(uuid.uuid4())
+message_group_uuid = str(uuid.uuid4())
 now = datetime.now(timezone.utc).astimezone()
 users = get_user_uuids()
 
@@ -223,10 +223,10 @@ for index, line in enumerate(lines):
         message = line.replace('Person 2: ', '')
     else:
         print(line)
-        raise 'invalid line'
+        raise Exception("invalid line")
 
-  created_at: tuple = (now + timedelta(minutes=index)).isoformat()
-  create_message(
+    created_at: tuple = (now + timedelta(minutes=index)).isoformat()
+    create_message(
                  client=dynamodb,
                  message_group=message_group_uuid,
                  created_at=created_at,
