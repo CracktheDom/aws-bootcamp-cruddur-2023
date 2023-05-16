@@ -151,7 +151,7 @@ insert into public.activities (user_uuid, message, expires_at)
     current_timestamp + interval '10 day'
   );
 ```
-* Create db connect script
+* Create database connection script
 - in *backend-flask/bin/db-connect* append
 ```sh
 NO_DB_CONNECTION_URL=$(sed 's/\/cruddur//g' <<< $CONNECTION_URL)
@@ -200,12 +200,12 @@ $bin_path/db-seed
 ```
 ## Connect to RDS Instance
 ### Need driver to interact with Postgres DB
-* add psycopg[binary] & psycopg[pool] to *backend-flask/requirements.txt*
+* add *psycopg[binary]* & *psycopg[pool]* to *backend-flask/requirements.txt*
 * execute `python3 -m pip -r requirements.txt` in the *backend-flask* directory
 
-**connection pooling within Postgres**
+#### Connection Pooling within Postgres
 
-```py
+```sh
 touch backend-flask/lib/db.py
 ```
 
@@ -267,8 +267,7 @@ class HomeActivities:
          json = cur.fetchone()
     return json[0]
 ```
-* Modify database instance security group to allow ingress from GITPOD environment
-* Create new file and make it executable for user
+* Create new file that will modify database instance security group to allow ingress from GITPOD environment and make file executable for user
 
 
 ```sh
@@ -290,7 +289,7 @@ aws rds describe-db-instances --db-instance-identifier cruddur-db-instance --que
 export PROD_CONNECTION_URL="postgresql://${RDS_DB_USERNAME}:${RDS_DB_PASSWORD}@${CRUDDUR_DB_ENDPOINT}:5432/cruddur"
 ```
 * Modify DB instance security group to allow traffic from GITPOD environment
-* in *backend-flask/bin/rds-update-sg-rule*
+* in *backend-flask/bin/rds-update-sg-rule* file
 ```sh
 CYAN='\033[1;36m'
 NO_COLOR='\033[0m'
@@ -301,7 +300,7 @@ aws ec2 modify-security-group-rules --group-id $DB_SG_ID \
 --security-group-rules "SecurityGroupRuleId=$DB_SG_RULE_ID,SecurityGroupRule={Description=GITPOD,IpProtocol=tcp,FromPort=5432,ToPort=5432,CidrIpv4=$GITPOD_IP/32}"
 
 ```
-in *.gitpod.yml* file
+* append the *.gitpod.yml* file with the following code, upon starting up the GITPOD environment, retrieve the newly assigned GITPOD IP address and execute the RDS SG update script to alter RDS security group to allow ingress from GITPOD environment. 
 ```yml
 tasks:
   - name: postgres
