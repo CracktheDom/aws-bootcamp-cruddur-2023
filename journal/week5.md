@@ -6,7 +6,7 @@ mkdir backend-flask/bin/DDB
 touch backend-flask/bin/DDB/schema-load
 ```
 
-* append the following to the *schema-load* file, enter the following
+* append the following to the *schema-load* file
 
 ```py
 #!/usr/bin/env python3
