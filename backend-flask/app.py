@@ -71,9 +71,10 @@ origins = [frontend, backend]
 cors = CORS(
   app, 
   resources={r"/api/*": {"origins": origins}},
-  headers="Content-Type,Authorization",
-  expose_headers="location,link,Authorization",
-  allow_headers="Content-Type,if-modified-since",
+  headers=["Content-Type", "Authorization"],
+  expose_headers="Authorization",
+  # expose_headers="location,link",
+  # allow_headers="Content-Type,if-modified-since",
   methods="OPTIONS,GET,HEAD,POST"
 )
 
@@ -179,6 +180,8 @@ def data_create_message():
 @app.route("/api/activities/home", methods=['GET'])
 @cross_origin()
 def data_home():
+  app.logger.debug("--- Authorization ---")
+  app.logger.debug(request.headers.get['Authorization'])
   access_token = cognito_verify_token.extract_access_token(request.headers)
   app.logger.debug("What is in request.headers")
   app.logger.debug(request.headers)
