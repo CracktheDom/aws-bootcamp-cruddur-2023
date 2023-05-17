@@ -192,12 +192,12 @@ def data_home():
     app.logger.debug(cognito_verify_token.claims)
     app.logger.debug('username claims')
     app.logger.debug(cognito_verify_token.claims['username'])
+    data = HomeActivities.run(cognito_user_id=cognito_verify_token.claims['username'])  # enter logger=logger as a parameter to enable logging to CloudWatch
   except TokenVerifyError as e:
-    _ = request.data
-    abort(make_response(jsonify(message=str(e)), 401))
+    app.logger.debug(e)
+    app.logger.debug("unauthenticated")
 
 
-  data = HomeActivities.run()  # enter logger=logger as a parameter to enable logging to CloudWatch
   return data, 200
 
 
