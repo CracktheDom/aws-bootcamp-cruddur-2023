@@ -180,7 +180,7 @@ aws cognito-idp admin-set-user-password \
 
 #### SignupPage.js
 
-* Insert this import statement into *frontend-react-js/src/pages/SignupPage.js* and replace ***onsubmit*** variable with following code:
+* Insert this import statement into `frontend-react-js/src/pages/SignupPage.js` and replace ***onsubmit*** variable with following code:
 
 ```js
 import { Auth } from 'aws-amplify'
@@ -317,7 +317,7 @@ import { Auth } from 'aws-amplify'
 mkdir backend-flask/lib 
 ```
 * Create new Python file `touch backend-flask/lib/cognito_token_verification.py`
-* Insert following code into *backend-flask/lib/cognito_token_verification.py*
+* Insert following code into `backend-flask/lib/cognito_token_verification.py`
 
 ```py
 import time
