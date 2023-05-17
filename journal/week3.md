@@ -1,6 +1,9 @@
 # Week 3 — Decentralized Authentication
+
 ## Create Cognito User Pool
+
 ### Use AWS CLI
+
 ```sh
 aws cognito-idp create-user-pool --pool-name cruddur_poolhall \
 --policies PasswordPolicy={MinimumLength=16,RequireUppercase=True,RequireLowercase=True,RequireNumbers=True} \
@@ -19,6 +22,7 @@ aws cognito-idp create-user-pool --pool-name cruddur_poolhall \
 ![HINT: pic of AWS CLI showing JSON response](https://user-images.githubusercontent.com/85846263/229114307-c3ae46bd-8c84-468e-b9b4-ca719c610eb1.png)
 
 ### Navigate to AWS Cognito to Create Client App
+
 * On the ***cruddur_pool*** User Pool info page, click on the ***App integration*** tab
 
 ![HINT: pic of user pool info page](https://user-images.githubusercontent.com/85846263/229114518-eed57288-ec62-46cb-8860-067ef9a28990.png)
@@ -28,10 +32,12 @@ aws cognito-idp create-user-pool --pool-name cruddur_poolhall \
 * Enter a name in the ***App client name*** field
 * Finally click on the ***Create app client*** button
 * On the ***cruddur_pool*** info page, click the ***App integration*** tab and navigate down to ***App client list*** section
-* Copy the ***Client ID*** to ***REACT_APP_AWS_USER_POOLS_WEB_CLIENT_ID*** environment variable in the `docker-compose.yml` file
+* Copy the value of the ***Client ID*** to assign to the ***REACT_APP_AWS_USER_POOLS_WEB_CLIENT_ID*** environment variable in the `docker-compose.yml` file
 
 ![HINT pic of user pool web client id](https://user-images.githubusercontent.com/85846263/229114730-56811879-f398-449f-8080-c878894bf830.png)
-### Add aws-amplify to frontend
+
+### Add *aws-amplify* to frontend
+
 * Navigate to `frontend-react-js` directory and execute `npm install aws-amplify --save`
 * Verify ***aws-amplify*** is in the `frontend-react-js/package.json` file
 * Navigate to `frontend-react-js/src/App.js` and append the file with the following code:
@@ -55,7 +61,7 @@ Amplify.configure({
   }
 })
 ```
-* added the relevant amplify environment variables to `docker-compose.yml` file
+* add the relevant amplify environment variables to `docker-compose.yml` file
 
 ```yaml
   frontend-react-js:
@@ -66,7 +72,9 @@ Amplify.configure({
       REACT_APP_AWS_USER_POOLS_ID: "us-east-2_fjgjtuh"  # User Pool ID
       REACT_APP_CLIENT_ID: "76ytuhju980kiojly934fdgp"
 ```
+
 #### Conditionally show components based on whether user is logged in or not
+
 * Navigate to `frontend-react-js/src/pages/HomeFeedPage.js` and append the file with the following code:
 
 ```js
@@ -96,7 +104,7 @@ import { Amplify } from 'aws-amplify';
 ```
 discuss which sections of frontend will be displayed or hidden when user logs in
 
-* Next, in the `frontend-react-js/src/components/ProfileInfo.js` file, add import statement & replace the code block that contains cookie with the following code:
+* Next, in the `frontend-react-js/src/components/ProfileInfo.js` file, add this import statement & replace the code block that contains cookie with the following code:
 
 ```js
 import { Amplify } from 'aws-amplify'; 
@@ -137,7 +145,9 @@ import { Auth } from 'aws-amplify';
     return false
   }
 ```
+
 ### Run Containers to check if implementation of aws-amplify is working
+
 * In a terminal, execute `docker compose -f "docker-compose.yml" up -d --build`
 * Click on URL to the frontend, click on ***Sign In*** button, enter email and password, on ***Sign In*** button
 * ***Incorrect username or password*** error message should pop up
@@ -145,13 +155,15 @@ import { Auth } from 'aws-amplify';
 ![HINT: pic of error message displayed on Sign In page](https://user-images.githubusercontent.com/85846263/229115603-78f64ec9-018f-4245-9cd1-05744e378916.png)
 
 ### Go to AWS Cognito Console and Manually Create a New User
+
 * Click on ***Create user*** button
 * Enter email address and password and check the box for ***Mark email address as verified***
 * Click on ***Create user*** button
 
 ### Go to Cruddur Sign In Page
-* Sign in the with same credentials used on the Cognito ***Create user*** page
-I received a "user Session is null" error, when I look at the user info for the newly created user, the page displayed the "Force Password Change" under the Email verified section, but the app has not been fully implemented to utilize password changes, so I executed the following command in a terminal:
+
+* Sign in the with same credentials used on the Cognito ***Create user*** page.
+After attempting to login, I received a "user Session is null" error. When I looked at the user info for the newly created user in Cognito, the page displayed the "Force Password Change" message under the *Email verified* section. The app has not been fully implemented at this point to utilize password changes, so I executed the following command in a terminal to change the user password:
 
 ```sh
 aws cognito-idp admin-set-user-password \
@@ -160,13 +172,15 @@ aws cognito-idp admin-set-user-password \
 --password <new_password> \
 --permanent
 ```
-* With the email now verified, go to Cruddur (frontend url), sign in successfully
+* With the email now verified, go to Cruddur site (frontend url) to log in successfully
 
 ![HINT pic showing successfully logged into Cruddur after manually creating user](https://user-images.githubusercontent.com/85846263/229115787-373b72e2-0c9e-4a37-9353-cd4ba3555935.png)
 
 ### Implement aws-amplify in SignupPage.js, ConfirmationPage.js and RecoverPage.js
+
 #### SignupPage.js
-* Enter insert the import statement into `frontend-react-js/src/pages/SignupPage.js` and replace ***onsubmit*** variable with following code:
+
+* Insert this import statement into *frontend-react-js/src/pages/SignupPage.js* and replace ***onsubmit*** variable with following code:
 
 ```js
 import { Auth } from 'aws-amplify'
@@ -197,8 +211,10 @@ import { Auth } from 'aws-amplify'
     return false
   }
 ```
+
 #### ConfirmationPage.js
-* Enter insert the import statement into `frontend-react-js/src/pages/ConfirmationPage.js` and replace ***resend_code*** and ***onsubmit*** variables with following code:
+
+* Insert the import statement into `frontend-react-js/src/pages/ConfirmationPage.js` and replace ***resend_code*** and ***onsubmit*** variables with following code:
 ```js
 import { Auth } from 'aws-amplify'
 ...
@@ -234,7 +250,8 @@ import { Auth } from 'aws-amplify'
 ```
 
 #### RecoverPage.js
-* Enter insert the import statement into `frontend-react-js/src/pages/RecoverPage.js` and replace ***onsubmit_send_code*** and ***onsubmit_confirm_code*** variables with following code:
+
+* Insert the import statement into `frontend-react-js/src/pages/RecoverPage.js` and replace ***onsubmit_send_code*** and ***onsubmit_confirm_code*** variables with following code:
 ```js
   const onsubmit_send_code = async (event) => {
     event.preventDefault();
@@ -260,7 +277,9 @@ import { Auth } from 'aws-amplify'
     return false
   }
 ```
+
 ### Test Account Creation via the Cruddur site
+
 * Go to Cognito and delete the manually created user
 * Go to Cruddur site (frontend) and click the ***Join Now*** button
 * Enter all relevant info and click ***Sign In***
@@ -273,6 +292,7 @@ import { Auth } from 'aws-amplify'
 ![Pic of confirmation page](https://user-images.githubusercontent.com/85846263/229116451-2c683b0d-2544-43cc-9810-50a14380ba8d.png)
 
 ### Test Password Recovery
+
 * Logout of Cruddur site and click on ***Forgot Password*** link
 * Enter email address and a email with a confirmation code will be sent to the provided email address
 * On the ***Recovery your Password***, enter confirmation code and new password twice, click on ***Reset Password***
@@ -286,7 +306,8 @@ import { Auth } from 'aws-amplify'
 
 ![HINT: pic of successful lgoin after reset](https://user-images.githubusercontent.com/85846263/229116821-2169ba4f-c382-456e-b14b-3441ab21340b.png)
 
-## Implement handling of JSON Web Token (JWT) in the backend
+## Implement handling of JSON Web Token (JWT) in the back-end
+
 * Add *python-jose* and *Flask-AWSCognito* to `backend-flask/requirements.txt`
 * Execute `python3 -m pip install -r backend-flask/requirement.txt` to install dependencies
 * Execute `python3 -m pip freeze > backend-flask/requirements.txt` to add version numbers to packages
@@ -296,7 +317,7 @@ import { Auth } from 'aws-amplify'
 mkdir backend-flask/lib 
 ```
 * Create new Python file `touch backend-flask/lib/cognito_token_verification.py`
-* Insert following code into `backend-flask/lib/cognito_token_verification.py`
+* Insert following code into *backend-flask/lib/cognito_token_verification.py*
 
 ```py
 import time
@@ -424,7 +445,7 @@ class TokenService:
             _, access_token = auth_header.split()
         return access_token
 ```
-* Update backend-flask/app.py
+* Update `backend-flask/app.py` file
 
 ```py
 # ---FlaskAWSCognito JWT service ---
