@@ -1,12 +1,12 @@
 import os
 import sys
-import psycopg2
+import psycopg
 from psycopg_pool import ConnectionPool
 
 
 class DatabaseManipulator:
     def __init__(self):
-      """Initializes object, and Connection Pool to Postgres database"""
+        """Initializes object, and Connection Pool to Postgres database"""
         self.connection_url = os.getenv('CONNECTION_URL')
         self.pool = ConnectionPool(self.connection_url)
 

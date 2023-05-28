@@ -1,6 +1,6 @@
 import uuid
 from datetime import datetime, timedelta, timezone
-import psycopg2
+import psycopg
 from lib import db
 
 
