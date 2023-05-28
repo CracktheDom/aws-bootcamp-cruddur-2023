@@ -20,6 +20,7 @@ services:
       DG_SG_RULE_ID: "${DG_SG_RULE_ID}"
       RDS_DB_PASSWORD: "${RDS_DB_PASSWORD}"
       RDS_DB_USERNAME: "${RDS_DB_USERNAME}"
+      CRUDDUR_DB_ENDPOINT: "${CRUDDUR_DB_ENDPOINT}"
       CONNECTION_URL: "postgresql://postgres:password@db:5432/cruddur"
       PROD_CONNECTION_URL: "postgresql://${RDS_DB_USERNAME}:${RDS_DB_PASSWORD}@${CRUDDUR_DB_ENDPOINT}:5432/cruddur"
     build: ./backend-flask
