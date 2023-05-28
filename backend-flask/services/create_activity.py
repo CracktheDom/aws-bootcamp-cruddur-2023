@@ -55,16 +55,10 @@ class CreateActivity:
 
     def create_activity(handle, message, expires_at):
         sql = f"""
-          INSERT INTO public.activities (user_uuid, message, expires_at)
-          VALUES ((select uuid from public.users where users.handle = '{handle}'), '{message}', '{expires_at}') RETURNING uuid;
-          """
-        uuid = db.dbm.query_commit_with_returning_id(  # this redefines the import of uuid
-          sql, 
-          handle=handle, 
-          message=message, 
-          expires_at=expires_at
-          )
-
+        INSERT INTO public.activities (user_uuid, message, expires_at)
+        VALUES ((SELECT uuid FROM public.users WHERE users.handle = %(handle)s LIMIT 1), %(message)s, %(expires_at)s RETURNING uuid;
+        """
+        uuid = database_manipulator.query_commit(sql, handle=handle, message=message, expires_at=expires_at)
         try:
             with pool.connection() as conn:
                 with conn.cursor() as cur:
@@ -72,9 +66,9 @@ class CreateActivity:
                     cur.execute(sql)
                     conn.commit()
         except OperationalError as error:
-            db.dbm.print_psycopg2_exception(error)
+            database_manipulator.print_psycopg2_exception(error)
             conn.close()
         except Exception as error:
-            db.dbm.print_psycopg2_exception(error)
+            database_manipulator.print_psycopg2_exception(error)
 
             # conn.rollback()
