@@ -23,7 +23,7 @@ aws rds create-db-instance \
 --no-deletion-protection
 ```
 
-* stop DB instance
+* stop DB instance via the AWS RDS console
 
 ![HINT pic of DB instance stopped temporarily](https://user-images.githubusercontent.com/85846263/229120991-83a00a75-4c76-4690-89be-c547f582bc99.png)
 
@@ -41,7 +41,7 @@ backend-flask/bin/db-setup
 ```sql
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 ```
-* Create environment variables
+* Create environment variables for database connection URLs
 ```sh
 export CONNECTION_URL="postgresql://postgres:password@localhost:5432/cruddur"
 export PROD_CONNECTION_URL="postgresql://cruddur_root:SomeType0fPas5w0rD@localhost:5432/cruddur"
@@ -81,7 +81,7 @@ psql $CON_URL cruddur < $schema_path
 ```
 * Change the permissions of scripts, make them executable for user
 ```sh
-chmod -Rv u+x ./backend-flask/bin/*
+chmod -Rv u+x backend-flask/bin/*
 ```
 ## Construct schema for database
 * in *backend-flask/db/schema.sql* append:
@@ -110,14 +110,14 @@ CREATE TABLE public.activities (
   created_at TIMESTAMP default current_timestamp NOT NULL
 );
 ```
-** in postgres schema refers to different namespaces **
+** In Postgres, schema refers to different namespaces **
 
-* Execute the following code to test if it is successful
+* Execute the following code in a terminal to test if schema construction is successful
 ```sh
 psql cruddur < backend-flask/db/schema.sql -h localhost -U postgres
 ```
 ## Seed (provide mock) data
-* in *backend-flask/bin/db-seed* append
+* in *backend-flask/bin/db-seed* append with the following code
 
 ```sh
 CYAN='\033[1;36m'
@@ -151,13 +151,13 @@ insert into public.activities (user_uuid, message, expires_at)
     current_timestamp + interval '10 day'
   );
 ```
-* Create database connection script
+### Create database connection script
 - in *backend-flask/bin/db-connect* append
 ```sh
 NO_DB_CONNECTION_URL=$(sed 's/\/cruddur//g' <<< $CONNECTION_URL)
 psql $NO_DB_CONNECTION_URL
 ```
-* Check if any active database connections are present
+### Create script to check if any active database connections are present
 - in *backend-flask/bin/db-sessions* append:
 
 ```sh
@@ -205,11 +205,14 @@ $bin_path/db-seed
 
 #### Connection Pooling within Postgres
 
+Connection pooling is a technique used to manage and reuse database connections in order to improve the performance, scalability, and efficiency of applications that interact with databases. It involves creating a pool of pre-established database connections that can be reused by multiple client processes or threads instead of creating a new connection for each database request.
+
+* Create a new file
 ```sh
 touch backend-flask/lib/db.py
 ```
 
-* in *backend-flask/lib/db.py*
+* in *backend-flask/lib/db.py* enter the following
 ```py
 import os
 from psycopg_pool import ConnectionPool
@@ -267,29 +270,39 @@ class HomeActivities:
          json = cur.fetchone()
     return json[0]
 ```
-* Create new file that will modify database instance security group to allow ingress from GITPOD environment and make file executable for user
-
+### Create new file that will modify database instance security group to allow ingress from GITPOD environment and make file executable for user
 
 ```sh
 touch backend-flask/bin/rds-update-sg-rule
 chmod u+x backend-flask/bin/rds-update-sg-rule
+```
+
+* assign username and password for RDS DB to environment variables
+
+```sh
 export RDS_DB_USERNAME="cruddur_root"
 export RDS_DB_PASSWORD="SomeType0fPas5w0rD"
-
-export DB_SG_ID=`aws rds describe-db-instances --db-instance-identifier cruddur-db-instance --query DBInstances[0].VpcSecurityGroups[0].VpcSecurityGroupId`
-
-export DB_SG_RULE_ID=`aws ec2 describe-security-group-rules --filters Name=group-id,Values=[$DB_SG_ID] --query 'SecurityGroupRules[].SecurityGroupRuleId | [1]'`
-
-export GITPOD_IP=$(curl ifconfig.me)
-
-aws rds describe-db-instances --db-instance-identifier cruddur-db-instance --query 'DBInstances[].Endpoint[].Address[] | [0]'
 ```
-* Create environment variable to connect with RDS cruddur DB
+
+* Retrieve cruddur database security group ID and security group rule ID which are needed to execute command to alter its security group rule
+```sh
+export DB_SG_ID=`aws rds describe-db-instances --db-instance-identifier cruddur-db-instance --query DBInstances[0].VpcSecurityGroups[0].VpcSecurityGroupId`
+export DB_SG_RULE_ID=`aws ec2 describe-security-group-rules --filters Name=group-id,Values=[$DB_SG_ID] --query 'SecurityGroupRules[].SecurityGroupRuleId | [1]'`
+```
+
+* Create environment variables for GITPOD environment IP address, cruddur database endpoint
+```sh
+export GITPOD_IP=$(curl ifconfig.me)
+aws rds describe-db-instances --db-instance-identifier cruddur-db-instance --query DBInstances[0].Endpoint.Address --output text
+```
+
+* Modify environment variable to connect with RDS cruddur database instance
+
 ```sh
 export PROD_CONNECTION_URL="postgresql://${RDS_DB_USERNAME}:${RDS_DB_PASSWORD}@${CRUDDUR_DB_ENDPOINT}:5432/cruddur"
 ```
-* Modify DB instance security group to allow traffic from GITPOD environment
-* in *backend-flask/bin/rds-update-sg-rule* file
+
+* In *backend-flask/bin/rds-update-sg-rule* file, modify DB instance security group to allow traffic from GITPOD environment
 ```sh
 CYAN='\033[1;36m'
 NO_COLOR='\033[0m'
@@ -298,8 +311,8 @@ printf "${CYAN}== ${LABEL}${NO_COLOR}\n"
 
 aws ec2 modify-security-group-rules --group-id $DB_SG_ID \
 --security-group-rules "SecurityGroupRuleId=$DB_SG_RULE_ID,SecurityGroupRule={Description=GITPOD,IpProtocol=tcp,FromPort=5432,ToPort=5432,CidrIpv4=$GITPOD_IP/32}"
-
 ```
+
 * append the *.gitpod.yml* file with the following code, upon starting up the GITPOD environment, retrieve the newly assigned GITPOD IP address and execute the RDS SG update script to alter RDS security group to allow ingress from GITPOD environment. 
 ```yml
 tasks:
