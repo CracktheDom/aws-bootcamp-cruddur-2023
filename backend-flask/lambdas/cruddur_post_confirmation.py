@@ -9,10 +9,10 @@ def lambda_handler(event, context):
         cur = conn.cursor()
         cur.execute(f"""INSERT INTO public.users (display_name, handle, email, cognito_user_id)
                     VALUES (
-                    '{user['name']}',
-                    '{user['preferred_username']}',
-                    '{user['email']}',
-                    '{user['sub']}')"""
+                    %(user['name'])s,
+                    %(user['preferred_username'])s,
+                    %(user['email'])s,
+                    %(user['sub'])s)"""
                     )
         conn.commit()
     except (Exception, psycopg2.DatabaseError) as error:
