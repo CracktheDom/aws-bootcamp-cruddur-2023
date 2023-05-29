@@ -1,6 +1,6 @@
 import json
 import os
-import psycopg2  # should this be version 3?
+import psycopg2  # version 2 needed to use compiled psycopg layer
 
 def lambda_handler(event, context):
     user = event['request']['userAttributes']
