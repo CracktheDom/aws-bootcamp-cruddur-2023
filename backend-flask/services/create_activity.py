@@ -1,6 +1,6 @@
 import uuid
 from datetime import datetime, timedelta, timezone
-import psycopg
+import psycopg  # Note: the module name is psycopg, not psycopg3
 from lib import db
 
 
@@ -60,7 +60,10 @@ class CreateActivity:
         """
         uuid = database_manipulator.query_commit(sql, handle=handle, message=message, expires_at=expires_at)
         try:
+            # Connect to an existing database
             with pool.connection() as conn:
+
+                # Open a cursor to perform database operations
                 with conn.cursor() as cur:
                     print(f"cursor object: {cur}")
                     cur.execute(sql)
