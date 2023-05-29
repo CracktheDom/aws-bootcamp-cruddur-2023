@@ -9,12 +9,12 @@ class DatabaseManipulator:
     A class that represents a database manipulator
     """
 
-    def __init__(self, pool, connection_url):
+    def __init__(self):
         """
         Initializes a new instance of DatabaseManipulator, and initializes 
         the ConnectionPool to a Postgres database
         """
-        self.connection_url = os.getenv('CONNECTION_URL')
+        self.connection_url = os.getenv('PROD_CONNECTION_URL')
         self.pool = ConnectionPool(self.connection_url)
 
     def query_commit(self, sql, **kwargs) -> str:
