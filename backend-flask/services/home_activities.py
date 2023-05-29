@@ -18,7 +18,7 @@ class HomeActivities:
         #     span.set_attribute("app.result_length", len(results))
         #     return results
 
-        return db.dbm.query_array_json("""
+        return database_manipulator.query_array_json("""
                             SELECT
                               activities.uuid,
                               users.display_name,
