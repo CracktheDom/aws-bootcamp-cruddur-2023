@@ -102,39 +102,45 @@ cognito_verify_token = CognitoTokenVerification(
 rollbar_access_token = os.getenv('ROLLBAR_ACCESS_TOKEN')
 
 
+@app.route("/api/health-check")
+def health_check():
+  """Route to check the status of endpoint"""
+  return {"success": True}, 200
+
+
 @app.before_first_request
 def init_rollbar():
-    """init rollbar module"""
-    rollbar.init(
-        # access token
-        rollbar_access_token,
-        # environment name
-        'development',
-        # server root directory, makes tracebacks prettier
-        root=os.path.dirname(os.path.realpath(__file__)),
-        # flask already sets up logging
-        allow_logging_basic_config=False)
+  """init rollbar module"""
+  rollbar.init(
+      # access token
+      rollbar_access_token,
+      # environment name
+      'development',
+      # server root directory, makes tracebacks prettier
+      root=os.path.dirname(os.path.realpath(__file__)),
+      # flask already sets up logging
+      allow_logging_basic_config=False)
 
-    # send exceptions from `app` to rollbar, using flask's signal system.
-    got_request_exception.connect(rollbar.contrib.flask.report_exception, app)
+  # send exceptions from `app` to rollbar, using flask's signal system.
+  got_request_exception.connect(rollbar.contrib.flask.report_exception, app)
 
     
 #  --- Rollbar ---
 @app.route('/rollbar/test')
 def rollbar_test():
-    rollbar.report_message("Hello World!", "warning")
+  rollbar.report_message("Hello World!", "warning")
 
-    # # extra fields we'd like to send along to rollbar (optional)
-    # extra_data = {'datacenter': 'us1', 'app' : {'version': '0.1'}}
-    
-    # # report full exception info
-    # rollbar.report_exc_info(sys.exc_info(), request, extra_data=extra_data)
+  # # extra fields we'd like to send along to rollbar (optional)
+  # extra_data = {'datacenter': 'us1', 'app' : {'version': '0.1'}}
+  
+  # # report full exception info
+  # rollbar.report_exc_info(sys.exc_info(), request, extra_data=extra_data)
 
-    # # and/or, just send a string message with a level
-    # rollbar.report_message("Here's a message", 'info', request, extra_data=extra_data)
+  # # and/or, just send a string message with a level
+  # rollbar.report_message("Here's a message", 'info', request, extra_data=extra_data)
 
-    # yield '<p>Caught an exception</p>'
-    return "Hello World!"
+  # yield '<p>Caught an exception</p>'
+  return "Hello World!"
 
   
 @app.route("/api/message_groups", methods=['GET'])
@@ -214,6 +220,7 @@ def data_handle(handle):
   if model['errors'] is not None:
     return model['errors'], 422
   return model['data'], 200
+
 
 @app.route("/api/activities/search", methods=['GET'])
 def data_search():
