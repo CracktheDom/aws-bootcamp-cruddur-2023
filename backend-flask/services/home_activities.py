@@ -7,7 +7,7 @@ from lib import db  # Postgres
 tracer = trace.get_tracer("home.activities")
 
 class HomeActivities:
-    def run(cognito_user_id=None):
+    def run(cognito_user_id=None):  # insert logger as parameter to implement Watchtower/logging for CloudWatch
         # logger.info("HomeActivities")
         # with tracer.start_as_current_span("home-activities-mock-data") as inner_span:
         #     span = trace.get_current_span()
