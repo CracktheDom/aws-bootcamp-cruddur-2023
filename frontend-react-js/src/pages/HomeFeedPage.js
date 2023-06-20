@@ -25,7 +25,7 @@ export default function HomeFeedPage() {
       const res = await fetch(backend_url, {
         headers: {
           // passing header along with token to back-end
-          Authorization: `Bearer ${localStorage.getItem('access_token')}`
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`
         },
         method: "GET"
       });
@@ -41,8 +41,7 @@ export default function HomeFeedPage() {
   };
 
   const checkAuth = async () => {
-    console.log('checkAuth')
-    // [TODO] Authenication
+    console.log('entered checkAuth method');
     Auth.currentAuthenticatedUser({
       // Optional, By default is false.
       // If set to true, this call will send a 
