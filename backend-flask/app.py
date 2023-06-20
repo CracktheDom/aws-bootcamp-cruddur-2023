@@ -186,10 +186,10 @@ def data_create_message():
 @app.route("/api/activities/home", methods=['GET'])
 @cross_origin()
 def data_home():
-  app.logger.debug("\033[31m --- Authorization --- ")
+  app.logger.debug("\033[32m --- Authorization --- ")
   app.logger.debug("What is in request.headers \033[0m")
   app.logger.debug(request.headers)
-  # app.logger.debug(request.headers['Authorization'])
+  app.logger.debug(f"\033[32m Auth token: \033[0m {request.headers.get('Authorization')}")
   # no 'Authorization' key is present in request.headers/request_headers
   access_token = cognito_verify_token.extract_access_token(request.headers)
 

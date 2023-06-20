@@ -118,7 +118,7 @@ class CognitoTokenVerification:
     # @classmethod
     def extract_access_token(self, request_headers):
         access_token = None
-        auth_header = request_headers["Authorization"]
+        auth_header = request_headers.get("Authorization")
         # no 'Authorization' key is present in request.headers/request_headers
         if auth_header and " " in auth_header:
             _, access_token = auth_header.split(" ")
