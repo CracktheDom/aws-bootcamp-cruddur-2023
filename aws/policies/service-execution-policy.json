@@ -1,13 +1,22 @@
 {
-    "Version": "2012-10-17",
-    "Statement": [
-      {
-        "Effect": "Allow",
-        "Action": [
-          "ssm:GetParameters",
-          "ssm:GetParameter"
-        ],
-        "Resource": "arn:aws:ssm:us-east-2:785139023983:parameter/cruddur/backend-flask/*"
-      }
-    ]
-  }
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ecr:GetAuthorizationToken"
+      ],
+      "Resource": [
+        "*"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ssm:GetParameters",
+        "ssm:GetParameter"
+      ],
+      "Resource": "arn:aws:ssm:us-east-2:785139023983:parameter/cruddur/backend-flask/*"
+    }
+  ]
+}
