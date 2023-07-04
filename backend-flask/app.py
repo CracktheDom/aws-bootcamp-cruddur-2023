@@ -72,7 +72,7 @@ cors = CORS(
   app, 
   resources={r"/api/*": {"origins": origins}},
   headers=["Content-Type", "Authorization"],
-  expose_headers="Authorization",
+  expose_headers=["Authorization"],
   # expose_headers="location,link",
   # allow_headers="Content-Type,if-modified-since",
   methods="OPTIONS,GET,HEAD,POST"
@@ -166,8 +166,9 @@ def data_messages(handle):
   return model['data'], 200
 
 
+# the cross_origin decorator takes precedence over CORS constructor for this specific route
 @app.route("/api/messages", methods=['POST','OPTIONS'])
-@cross_origin()
+# @cross_origin()
 def data_create_message():
   user_sender_handle = 'andrewbrown'
   user_receiver_handle = request.json['user_receiver_handle']
@@ -183,8 +184,9 @@ def data_create_message():
   return model['data'], 200
 
 
+# the cross_origin decorator takes precedence over CORS constructor for this specific route
 @app.route("/api/activities/home", methods=['GET'])
-@cross_origin()
+# @cross_origin()
 def data_home():
   app.logger.debug("\033[32m --- Authorization --- ")
   app.logger.debug("What is in request.headers \033[0m")
@@ -192,7 +194,6 @@ def data_home():
   app.logger.debug(f"\033[32m Auth token: \033[0m {request.headers.get('Authorization')}")
   # no 'Authorization' key is present in request.headers/request_headers
   access_token = cognito_verify_token.extract_access_token(request.headers)
-
 
   try:
     cognito_verify_token.verify(access_token)
@@ -204,8 +205,7 @@ def data_home():
   except TokenVerifyError as e:
     app.logger.debug(e)
     app.logger.debug("unauthenticated")
-
-
+    data = HomeActivities.run()
   return data, 200
 
 
@@ -233,8 +233,9 @@ def data_search():
   return model['data'], 200
 
 
+# the cross_origin decorator takes precedence over CORS constructor for this specific route
 @app.route("/api/activities", methods=['POST','OPTIONS'])
-@cross_origin()
+# @cross_origin()
 def data_activities():
   user_handle  = 'andrewbrown'
   message = request.json['message']
