@@ -314,10 +314,10 @@ import { Auth } from 'aws-amplify'
 * Create new directory named `lib` in `backend-flask` directory by executing:
 
 ```sh 
-mkdir backend-flask/lib 
+mkdir -p backend-flask/lib 
 ```
-* Create new Python file `touch backend-flask/lib/cognito_token_verification.py`
-* Insert following code into `backend-flask/lib/cognito_token_verification.py`
+* Create new Python file by executing: `touch backend-flask/lib/cognito_token_verification.py`
+* Insert following code into *backend-flask/lib/cognito_token_verification.py*
 
 ```py
 import time
@@ -485,4 +485,4 @@ services:
       AWS_COGNITO_USER_POOL_ID: <user pool id>
       AWS_COGNITO_USER_POOL_CLIENT_ID: <user pool client id>
 ```
-* Run containers and navigate to Cruddur frontend, login to app
+* Run containers and navigate to Cruddur frontend, login to app to verify correct implementation of Cognito
