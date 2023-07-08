@@ -293,7 +293,7 @@ export DB_SG_RULE_ID=`aws ec2 describe-security-group-rules --filters Name=group
 * Create environment variables for GITPOD environment IP address, cruddur database endpoint
 ```sh
 export GITPOD_IP=$(curl ifconfig.me)
-aws rds describe-db-instances --db-instance-identifier cruddur-db-instance --query DBInstances[0].Endpoint.Address --output text
+export CRUDDUR_DB_ENDPOINT=`aws rds describe-db-instances --db-instance-identifier cruddur-db-instance --query DBInstances[0].Endpoint.Address --output text`
 ```
 
 * Modify environment variable to connect with RDS cruddur database instance
@@ -322,3 +322,32 @@ tasks:
       $THEIA_WORKSPACE_ROOT/backend-flask/bin/rds-update-sg-rule
 ```
 
+![pic of RDS SG update script executed](https://github.com/CracktheDom/aws-bootcamp-cruddur-2023/assets/85846263/5e771bac-256c-4830-b774-616dc92f0fd2)
+
+* In the AWS Management console, in the Inbound Rules of the security group for the RDS instance, the new rule will be displayed
+
+![Screenshot_20230318_224850](https://github.com/CracktheDom/aws-bootcamp-cruddur-2023/assets/85846263/8802828b-00bb-499d-9356-b87736e99af1)
+
+### Setup Cognito post confirmation trigger with a Lambda function
+#### Create the handler function and Lambda Trigger
+* Create Lambda function in the same VPC as RDS instance, in the Lambda console select the Enable VPC option to select VPC that RDS DB instance resides
+* paste code into Lambda code section of Management Console
+* select the same VPC & choose same subnet as used by RDS instance
+* Add environment variables for PROD_CONNECTION_URL with Postgres connection url
+* Lambda execution role needs to be created, if it does not exists, to allow for AllowVPCAccess
+* Add a layer source, input source ARN or select *Upload from S3* and select zip file
+* Add Trigger to Lambda function
+* Go to Cognito
+* click on *User pool properties* tab
+* click on *Add Lambda trigger*
+* select *Sign-up* trigger type
+* select *Post confirmation trigger*
+* select Lambda function in the *Assign Lambda function* section
+* click on *Add Lambda trigger*
+
+##### Add a Lambda Layer for psycopg2
+* Follow instructions at https://aws.plainenglish.io/creating-aws-lambda-layer-for-python-runtime-1d1bc6c5148d to download psycopg2-binary package, zip it, & upload to S3 bucket
+* Create security group for Lambda function that allows egress on port 5432 to security group of RDS instance
+* Configure security group of the RDS instance to allow ingress from Lambda function security group on port 5432
+
+  
